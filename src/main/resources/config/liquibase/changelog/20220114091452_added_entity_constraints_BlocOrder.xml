@@ -6,7 +6,7 @@
     <!--
         Added the constraints for entity BlocOrder.
     -->
-    <changeSet id="20220114091452-2" author="jhipster">
+    <changeSet id="20220114091452-2" author="jhipster" context="liquibase">
 
         <addForeignKeyConstraint baseColumnNames="etape_definition_id"
                                  baseTableName="bloc_order"

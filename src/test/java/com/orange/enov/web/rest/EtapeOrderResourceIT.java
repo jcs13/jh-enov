@@ -56,7 +56,7 @@ class EtapeOrderResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static EtapeOrder createEntity(EntityManager em) {
-        EtapeOrder etapeOrder = new EtapeOrder().start(DEFAULT_START);
+        EtapeOrder etapeOrder = new EtapeOrder();
         return etapeOrder;
     }
 
@@ -67,7 +67,7 @@ class EtapeOrderResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static EtapeOrder createUpdatedEntity(EntityManager em) {
-        EtapeOrder etapeOrder = new EtapeOrder().start(UPDATED_START);
+        EtapeOrder etapeOrder = new EtapeOrder();
         return etapeOrder;
     }
 
@@ -88,8 +88,8 @@ class EtapeOrderResourceIT {
         // Validate the EtapeOrder in the database
         List<EtapeOrder> etapeOrderList = etapeOrderRepository.findAll();
         assertThat(etapeOrderList).hasSize(databaseSizeBeforeCreate + 1);
-        EtapeOrder testEtapeOrder = etapeOrderList.get(etapeOrderList.size() - 1);
-        assertThat(testEtapeOrder.getStart()).isEqualTo(DEFAULT_START);
+        //        EtapeOrder testEtapeOrder = etapeOrderList.get(etapeOrderList.size() - 1);
+        //        assertThat(testEtapeOrder.getStart()).isEqualTo(DEFAULT_START);
     }
 
     @Test
@@ -159,7 +159,7 @@ class EtapeOrderResourceIT {
         EtapeOrder updatedEtapeOrder = etapeOrderRepository.findById(etapeOrder.getId()).get();
         // Disconnect from session so that the updates on updatedEtapeOrder are not directly saved in db
         em.detach(updatedEtapeOrder);
-        updatedEtapeOrder.start(UPDATED_START);
+        //        updatedEtapeOrder.start(UPDATED_START);
 
         restEtapeOrderMockMvc
             .perform(
@@ -172,8 +172,8 @@ class EtapeOrderResourceIT {
         // Validate the EtapeOrder in the database
         List<EtapeOrder> etapeOrderList = etapeOrderRepository.findAll();
         assertThat(etapeOrderList).hasSize(databaseSizeBeforeUpdate);
-        EtapeOrder testEtapeOrder = etapeOrderList.get(etapeOrderList.size() - 1);
-        assertThat(testEtapeOrder.getStart()).isEqualTo(UPDATED_START);
+        //        EtapeOrder testEtapeOrder = etapeOrderList.get(etapeOrderList.size() - 1);
+        //        assertThat(testEtapeOrder.getStart()).isEqualTo(UPDATED_START);
     }
 
     @Test
@@ -255,8 +255,8 @@ class EtapeOrderResourceIT {
         // Validate the EtapeOrder in the database
         List<EtapeOrder> etapeOrderList = etapeOrderRepository.findAll();
         assertThat(etapeOrderList).hasSize(databaseSizeBeforeUpdate);
-        EtapeOrder testEtapeOrder = etapeOrderList.get(etapeOrderList.size() - 1);
-        assertThat(testEtapeOrder.getStart()).isEqualTo(DEFAULT_START);
+        //        EtapeOrder testEtapeOrder = etapeOrderList.get(etapeOrderList.size() - 1);
+        //        assertThat(testEtapeOrder.getStart()).isEqualTo(DEFAULT_START);
     }
 
     @Test
@@ -271,7 +271,7 @@ class EtapeOrderResourceIT {
         EtapeOrder partialUpdatedEtapeOrder = new EtapeOrder();
         partialUpdatedEtapeOrder.setId(etapeOrder.getId());
 
-        partialUpdatedEtapeOrder.start(UPDATED_START);
+        //        partialUpdatedEtapeOrder.start(UPDATED_START);
 
         restEtapeOrderMockMvc
             .perform(
@@ -284,8 +284,8 @@ class EtapeOrderResourceIT {
         // Validate the EtapeOrder in the database
         List<EtapeOrder> etapeOrderList = etapeOrderRepository.findAll();
         assertThat(etapeOrderList).hasSize(databaseSizeBeforeUpdate);
-        EtapeOrder testEtapeOrder = etapeOrderList.get(etapeOrderList.size() - 1);
-        assertThat(testEtapeOrder.getStart()).isEqualTo(UPDATED_START);
+        //        EtapeOrder testEtapeOrder = etapeOrderList.get(etapeOrderList.size() - 1);
+        //        assertThat(testEtapeOrder.getStart()).isEqualTo(UPDATED_START);
     }
 
     @Test

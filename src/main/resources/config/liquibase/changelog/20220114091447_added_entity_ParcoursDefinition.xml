@@ -9,7 +9,7 @@
     <!--
         Added the entity ParcoursDefinition.
     -->
-    <changeSet id="20220114091447-1" author="jhipster">
+    <changeSet id="20220114091447-1" author="jhipster" context="liquibase">
         <createTable tableName="parcours_definition">
             <column name="id" type="varchar(255)">
                 <constraints primaryKey="true" nullable="false"/>

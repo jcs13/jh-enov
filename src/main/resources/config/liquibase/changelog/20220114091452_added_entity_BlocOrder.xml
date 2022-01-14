@@ -9,7 +9,7 @@
     <!--
         Added the entity BlocOrder.
     -->
-    <changeSet id="20220114091452-1" author="jhipster">
+    <changeSet id="20220114091452-1" author="jhipster" context="liquibase">
         <createTable tableName="bloc_order">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
@@ -17,14 +17,17 @@
             <column name="start" type="boolean">
                 <constraints nullable="true" />
             </column>
+            <column name="parcours_definition_id" type="varchar(255)">
+                <constraints nullable="true"  />
+            </column>
             <column name="etape_definition_id" type="varchar(255)">
-                <constraints nullable="true" unique="true" uniqueConstraintName="ux_bloc_order__etape_definition_id" />
+                <constraints nullable="true"/>
             </column>
             <column name="current_id" type="varchar(255)">
-                <constraints nullable="true" unique="true" uniqueConstraintName="ux_bloc_order__current_id" />
+                <constraints nullable="true"/>
             </column>
             <column name="next_id" type="varchar(255)">
-                <constraints nullable="true" unique="true" uniqueConstraintName="ux_bloc_order__next_id" />
+                <constraints nullable="true"/>
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>

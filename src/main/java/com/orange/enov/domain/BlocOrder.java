@@ -25,19 +25,24 @@ public class BlocOrder implements Serializable {
     @Column(name = "start")
     private Boolean start;
 
+    @JsonIgnoreProperties(value = { "etapeDefinitions" }, allowSetters = true)
+    @OneToOne
+    @JoinColumn
+    private ParcoursDefinition parcoursDefinition;
+
     @JsonIgnoreProperties(value = { "blocDefinitions", "parcoursDefinition" }, allowSetters = true)
     @OneToOne
-    @JoinColumn(unique = true)
+    @JoinColumn
     private EtapeDefinition etapeDefinition;
 
     @JsonIgnoreProperties(value = { "element", "etapeDefinition" }, allowSetters = true)
     @OneToOne
-    @JoinColumn(unique = true)
+    @JoinColumn
     private BlocDefinition current;
 
     @JsonIgnoreProperties(value = { "element", "etapeDefinition" }, allowSetters = true)
     @OneToOne
-    @JoinColumn(unique = true)
+    @JoinColumn
     private BlocDefinition next;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -66,6 +71,14 @@ public class BlocOrder implements Serializable {
 
     public void setStart(Boolean start) {
         this.start = start;
+    }
+
+    public ParcoursDefinition getParcoursDefinition() {
+        return this.parcoursDefinition;
+    }
+
+    public void setParcoursDefinition(ParcoursDefinition parcoursDefinition) {
+        this.parcoursDefinition = parcoursDefinition;
     }
 
     public EtapeDefinition getEtapeDefinition() {

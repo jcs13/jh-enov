@@ -48,7 +48,7 @@ entity Offre {
 }
 
 entity OffreParcoursComposition {
-    start Boolean
+    inheritanceOrder Integer required
 }
 
 relationship OneToOne {
@@ -71,7 +71,7 @@ entity EtapeDefinition {
 
 
 entity EtapeOrder {
-    start Boolean
+    transitionOrder Integer required
 }
 
 relationship OneToOne {
@@ -94,7 +94,7 @@ entity Element {
 
 
 entity BlocOrder {
-    start Boolean
+    transitionOrder Integer required
 }
 
 relationship OneToOne {

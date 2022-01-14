@@ -9,7 +9,7 @@
     <!--
         Added the entity Bloc.
     -->
-    <changeSet id="20220114091444-1" author="jhipster">
+    <changeSet id="20220114091444-1" author="jhipster" context="liquibase">
         <createTable tableName="bloc">
             <column name="id" type="varchar(255)">
                 <constraints primaryKey="true" nullable="false"/>

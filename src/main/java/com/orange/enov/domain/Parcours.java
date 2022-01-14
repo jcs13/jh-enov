@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -15,6 +18,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "parcours")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Parcours implements Serializable {
 
     private static final long serialVersionUID = 1L;

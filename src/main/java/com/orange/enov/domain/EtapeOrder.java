@@ -22,23 +22,23 @@ public class EtapeOrder implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "start")
-    private Boolean start;
-
     @JsonIgnoreProperties(value = { "etapeDefinitions" }, allowSetters = true)
     @OneToOne
-    @JoinColumn(unique = true)
+    @JoinColumn
     private ParcoursDefinition parcoursDefinition;
 
     @JsonIgnoreProperties(value = { "blocDefinitions", "parcoursDefinition" }, allowSetters = true)
     @OneToOne
-    @JoinColumn(unique = true)
+    @JoinColumn
     private EtapeDefinition current;
 
     @JsonIgnoreProperties(value = { "blocDefinitions", "parcoursDefinition" }, allowSetters = true)
     @OneToOne
-    @JoinColumn(unique = true)
+    @JoinColumn
     private EtapeDefinition next;
+
+    @Column(name = "transition_order")
+    private Integer transitionOrder;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -53,19 +53,6 @@ public class EtapeOrder implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Boolean getStart() {
-        return this.start;
-    }
-
-    public EtapeOrder start(Boolean start) {
-        this.setStart(start);
-        return this;
-    }
-
-    public void setStart(Boolean start) {
-        this.start = start;
     }
 
     public ParcoursDefinition getParcoursDefinition() {
@@ -107,6 +94,19 @@ public class EtapeOrder implements Serializable {
         return this;
     }
 
+    public Integer getTransitionOrder() {
+        return transitionOrder;
+    }
+
+    public void setTransitionOrder(Integer transitionOrder) {
+        this.transitionOrder = transitionOrder;
+    }
+
+    public EtapeOrder transitionOrder(Integer transitionOrder) {
+        this.transitionOrder = transitionOrder;
+        return this;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -131,7 +131,7 @@ public class EtapeOrder implements Serializable {
     public String toString() {
         return "EtapeOrder{" +
             "id=" + getId() +
-            ", start='" + getStart() + "'" +
+            ", transitionOrder='" + getTransitionOrder() + "'" +
             "}";
     }
 }

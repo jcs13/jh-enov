@@ -9,7 +9,7 @@
     <!--
         Added the entity Offre.
     -->
-    <changeSet id="20220114091442-1" author="jhipster">
+    <changeSet id="20220114091442-1" author="jhipster" context="liquibase">
         <createTable tableName="offre">
             <column name="id" type="varchar(255)">
                 <constraints primaryKey="true" nullable="false"/>

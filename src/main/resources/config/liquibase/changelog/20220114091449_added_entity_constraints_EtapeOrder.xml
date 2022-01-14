@@ -6,7 +6,7 @@
     <!--
         Added the constraints for entity EtapeOrder.
     -->
-    <changeSet id="20220114091449-2" author="jhipster">
+    <changeSet id="20220114091449-2" author="jhipster" context="liquibase">
 
         <addForeignKeyConstraint baseColumnNames="parcours_definition_id"
                                  baseTableName="etape_order"

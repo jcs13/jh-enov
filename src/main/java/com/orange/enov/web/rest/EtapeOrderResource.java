@@ -123,10 +123,9 @@ public class EtapeOrderResource {
         Optional<EtapeOrder> result = etapeOrderRepository
             .findById(etapeOrder.getId())
             .map(existingEtapeOrder -> {
-                if (etapeOrder.getStart() != null) {
-                    existingEtapeOrder.setStart(etapeOrder.getStart());
-                }
-
+                //                if (etapeOrder.getStart() != null) {
+                //                    existingEtapeOrder.setStart(etapeOrder.getStart());
+                //                }
                 return existingEtapeOrder;
             })
             .map(etapeOrderRepository::save);

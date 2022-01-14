@@ -3,6 +3,9 @@ package com.orange.enov.domain;
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -12,6 +15,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "offre")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Offre implements Serializable {
 
     private static final long serialVersionUID = 1L;

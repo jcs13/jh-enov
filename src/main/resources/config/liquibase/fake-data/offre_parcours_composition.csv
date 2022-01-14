@@ -1,11 +1,1 @@
-id;start
-1;true
-2;false
-3;true
-4;false
-5;true
-6;true
-7;false
-8;false
-9;false
-10;false
+id;start;offre_id;parcours_parent_id;parcours_child_id

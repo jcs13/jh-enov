@@ -6,7 +6,7 @@
     <!--
         Added the constraints for entity BlocDefinition.
     -->
-    <changeSet id="20220114091450-2" author="jhipster">
+    <changeSet id="20220114091450-2" author="jhipster" context="liquibase">
 
         <addForeignKeyConstraint baseColumnNames="element_id"
                                  baseTableName="bloc_definition"

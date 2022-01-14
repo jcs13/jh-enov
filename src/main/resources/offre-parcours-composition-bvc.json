@@ -1,0 +1,162 @@
+[
+  {
+    "offre": {
+      "id": "1",
+      "name": "BVC"
+    },
+    "parcoursParent": {
+      "id": "1",
+      "name": "core",
+      "label": "parcours commun",
+      "etapeDefinitions": [
+        {
+          "id": "10",
+          "name": "info",
+          "label": "informations générales & éligibilités",
+          "blocDefinitions": [
+            {
+              "id": "100",
+              "name": "infos-client",
+              "label": "informations client",
+              "element": {
+                "id": "1000",
+                "name": "info-client",
+                "path": "/element/info-client.php"
+              }
+            },
+            {
+              "id": "101",
+              "name": "adresse",
+              "label": "adresse client",
+              "element": {
+                "id": "1010",
+                "name": "adresse-client",
+                "path": "/element/adresse-client.php"
+              }
+            },
+            {
+              "id": "102",
+              "name": "mode-paiement",
+              "label": "mode de paiement",
+              "element": {
+                "id": "1020",
+                "name": "mode-paiement",
+                "path": "/element/mode-paiement.php"
+              }
+            }
+          ]
+        },
+        {
+          "id": "11",
+          "name": "configuration",
+          "label": "configuration de l'offre",
+          "blocDefinitions": [
+            {
+              "id": "110",
+              "name": "configuration-offre-castor",
+              "label": "configuration castor",
+              "element": {
+                "id": "1100",
+                "name": "configuration-offre-castor",
+                "path": "/element/configuration-offre-castor.php"
+              }
+            }
+          ]
+        },
+        {
+          "id": "12",
+          "name": "margesManoeuvre",
+          "label": "marges de manoeuvre",
+          "blocDefinitions": [
+            {
+              "id": "120",
+              "name": "mdm",
+              "label": "bloc marges de manoeuvre",
+              "element": {
+                "id": "1200",
+                "name": "mdm",
+                "path": "/element/mdm.php"
+              }
+            }
+          ]
+        },
+        {
+          "id": "13",
+          "name": "recapitulatif",
+          "label": "récapitulatif",
+          "blocDefinitions": [
+            {
+              "id": "130",
+              "name": "recap",
+              "label": "récapitulatif vendeur",
+              "element": {
+                "id": "1300",
+                "name": "recap-vendeur",
+                "path": "/element/recap-vendeur.php"
+              }
+            }
+          ]
+        },
+        {
+          "id": "14",
+          "name": "documents",
+          "label": "génération de documents",
+          "blocDefinitions": [
+            {
+              "id": "140",
+              "name": "gen-doc",
+              "label": "générer les documents",
+              "element": {
+                "id": "1400",
+                "name": "generer-documents",
+                "path": "/element/generer-documents.php"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "parcoursChild": {
+      "id": "2",
+      "name": "asproe",
+      "label": "parcours asproe",
+      "etapeDefinitions": [
+        {
+          "id": "10",
+          "name": "info",
+          "label": "informations générales & éligibilités",
+          "blocDefinitions": [
+            {
+              "id": "103",
+              "name": "eligibilite",
+              "label": "éligibilité 360",
+              "element": {
+                "id": "1030",
+                "name": "eligibilite",
+                "path": "/element/eligibilite.php"
+              }
+            }
+          ]
+        },
+        {
+          "id": "20",
+          "name": "terminaux",
+          "label": "Terminaux",
+          "blocDefinitions": [
+            {
+              "id": "200",
+              "name": "terminaux",
+              "label": "liste des terminaux",
+              "element": {
+                "id": "2000",
+                "name": "terminaux",
+                "path": "/element/terminaux.php"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "start": true
+  }
+]

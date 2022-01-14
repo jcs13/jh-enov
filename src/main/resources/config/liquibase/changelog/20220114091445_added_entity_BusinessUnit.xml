@@ -9,7 +9,7 @@
     <!--
         Added the entity BusinessUnit.
     -->
-    <changeSet id="20220114091445-1" author="jhipster">
+    <changeSet id="20220114091445-1" author="jhipster" context="liquibase">
         <createTable tableName="business_unit">
             <column name="id" type="varchar(255)">
                 <constraints primaryKey="true" nullable="false"/>
