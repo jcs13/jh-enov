@@ -48,6 +48,22 @@ public class CacheConfiguration {
             createCache(cm, com.orange.enov.domain.User.class.getName());
             createCache(cm, com.orange.enov.domain.Authority.class.getName());
             createCache(cm, com.orange.enov.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.orange.enov.domain.Parcours.class.getName());
+            createCache(cm, com.orange.enov.domain.Parcours.class.getName() + ".etapes");
+            createCache(cm, com.orange.enov.domain.Offre.class.getName());
+            createCache(cm, com.orange.enov.domain.Etape.class.getName());
+            createCache(cm, com.orange.enov.domain.Etape.class.getName() + ".blocs");
+            createCache(cm, com.orange.enov.domain.Bloc.class.getName());
+            createCache(cm, com.orange.enov.domain.BusinessUnit.class.getName());
+            createCache(cm, com.orange.enov.domain.OffreParcoursComposition.class.getName());
+            createCache(cm, com.orange.enov.domain.ParcoursDefinition.class.getName());
+            createCache(cm, com.orange.enov.domain.ParcoursDefinition.class.getName() + ".etapeDefinitions");
+            createCache(cm, com.orange.enov.domain.EtapeDefinition.class.getName());
+            createCache(cm, com.orange.enov.domain.EtapeDefinition.class.getName() + ".blocDefinitions");
+            createCache(cm, com.orange.enov.domain.EtapeOrder.class.getName());
+            createCache(cm, com.orange.enov.domain.BlocDefinition.class.getName());
+            createCache(cm, com.orange.enov.domain.Element.class.getName());
+            createCache(cm, com.orange.enov.domain.BlocOrder.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }
