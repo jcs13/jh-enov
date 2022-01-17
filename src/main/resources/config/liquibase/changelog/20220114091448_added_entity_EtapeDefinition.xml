@@ -11,7 +11,7 @@
     -->
     <changeSet id="20220114091448-1" author="jhipster">
         <createTable tableName="etape_definition">
-            <column name="id" type="varchar(255)">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
@@ -20,7 +20,7 @@
             <column name="label" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="parcours_definition_id" type="varchar(255)">
+            <column name="parcours_definition_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
@@ -43,7 +43,7 @@
                   separator=";"
                   tableName="etape_definition"
                   usePreparedStatements="true">
-            <column name="id" type="string"/>
+            <column name="id" type="numeric"/>
             <column name="name" type="string"/>
             <column name="label" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->

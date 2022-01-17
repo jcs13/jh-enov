@@ -14,7 +14,7 @@ describe('EtapeDefinition Management Detail Component', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { data: of({ etapeDefinition: { id: 'ABC' } }) },
+          useValue: { data: of({ etapeDefinition: { id: 123 } }) },
         },
       ],
     })
@@ -30,7 +30,7 @@ describe('EtapeDefinition Management Detail Component', () => {
       comp.ngOnInit();
 
       // THEN
-      expect(comp.etapeDefinition).toEqual(expect.objectContaining({ id: 'ABC' }));
+      expect(comp.etapeDefinition).toEqual(expect.objectContaining({ id: 123 }));
     });
   });
 });

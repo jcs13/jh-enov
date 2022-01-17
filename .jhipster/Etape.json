@@ -3,7 +3,7 @@
   "fields": [
     {
       "fieldName": "id",
-      "fieldType": "String",
+      "fieldType": "Long",
       "fieldValidateRules": ["required"]
     },
     {
@@ -13,6 +13,11 @@
     },
     {
       "fieldName": "label",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "etapeDefinitionId",
       "fieldType": "String",
       "fieldValidateRules": ["required"]
     },

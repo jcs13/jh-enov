@@ -23,6 +23,7 @@ export class EtapeUpdateComponent implements OnInit {
     id: [null, [Validators.required]],
     name: [null, [Validators.required]],
     label: [null, [Validators.required]],
+    etapeDefinitionId: [null, [Validators.required]],
     display: [null, [Validators.required]],
     parcours: [],
   });
@@ -56,7 +57,7 @@ export class EtapeUpdateComponent implements OnInit {
     }
   }
 
-  trackParcoursById(index: number, item: IParcours): string {
+  trackParcoursById(index: number, item: IParcours): number {
     return item.id!;
   }
 
@@ -84,6 +85,7 @@ export class EtapeUpdateComponent implements OnInit {
       id: etape.id,
       name: etape.name,
       label: etape.label,
+      etapeDefinitionId: etape.etapeDefinitionId,
       display: etape.display,
       parcours: etape.parcours,
     });
@@ -109,6 +111,7 @@ export class EtapeUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
       label: this.editForm.get(['label'])!.value,
+      etapeDefinitionId: this.editForm.get(['etapeDefinitionId'])!.value,
       display: this.editForm.get(['display'])!.value,
       parcours: this.editForm.get(['parcours'])!.value,
     };

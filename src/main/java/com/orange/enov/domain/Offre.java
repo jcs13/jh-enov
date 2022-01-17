@@ -1,6 +1,9 @@
 package com.orange.enov.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -18,8 +21,10 @@ public class Offre implements Serializable {
 
     @NotNull
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id", nullable = false)
-    private String id;
+    private Long id;
 
     @NotNull
     @Column(name = "name", nullable = false)
@@ -29,18 +34,27 @@ public class Offre implements Serializable {
     @Column(name = "label", nullable = false)
     private String label;
 
+    @OneToMany(mappedBy = "offre")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "etapeDefinitions", "offre" }, allowSetters = true)
+    private Set<ParcoursDefinition> parcoursDefinitions = new HashSet<>();
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "offres" }, allowSetters = true)
+    private BusinessUnit businessUnit;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public String getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public Offre id(String id) {
+    public Offre id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -68,6 +82,50 @@ public class Offre implements Serializable {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public Set<ParcoursDefinition> getParcoursDefinitions() {
+        return this.parcoursDefinitions;
+    }
+
+    public void setParcoursDefinitions(Set<ParcoursDefinition> parcoursDefinitions) {
+        if (this.parcoursDefinitions != null) {
+            this.parcoursDefinitions.forEach(i -> i.setOffre(null));
+        }
+        if (parcoursDefinitions != null) {
+            parcoursDefinitions.forEach(i -> i.setOffre(this));
+        }
+        this.parcoursDefinitions = parcoursDefinitions;
+    }
+
+    public Offre parcoursDefinitions(Set<ParcoursDefinition> parcoursDefinitions) {
+        this.setParcoursDefinitions(parcoursDefinitions);
+        return this;
+    }
+
+    public Offre addParcoursDefinition(ParcoursDefinition parcoursDefinition) {
+        this.parcoursDefinitions.add(parcoursDefinition);
+        parcoursDefinition.setOffre(this);
+        return this;
+    }
+
+    public Offre removeParcoursDefinition(ParcoursDefinition parcoursDefinition) {
+        this.parcoursDefinitions.remove(parcoursDefinition);
+        parcoursDefinition.setOffre(null);
+        return this;
+    }
+
+    public BusinessUnit getBusinessUnit() {
+        return this.businessUnit;
+    }
+
+    public void setBusinessUnit(BusinessUnit businessUnit) {
+        this.businessUnit = businessUnit;
+    }
+
+    public Offre businessUnit(BusinessUnit businessUnit) {
+        this.setBusinessUnit(businessUnit);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

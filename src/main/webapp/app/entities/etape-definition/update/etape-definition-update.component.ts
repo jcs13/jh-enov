@@ -55,7 +55,7 @@ export class EtapeDefinitionUpdateComponent implements OnInit {
     }
   }
 
-  trackParcoursDefinitionById(index: number, item: IParcoursDefinition): string {
+  trackParcoursDefinitionById(index: number, item: IParcoursDefinition): number {
     return item.id!;
   }
 

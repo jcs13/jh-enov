@@ -21,20 +21,20 @@ export class BlocDefinitionService {
   }
 
   update(blocDefinition: IBlocDefinition): Observable<EntityResponseType> {
-    return this.http.put<IBlocDefinition>(`${this.resourceUrl}/${getBlocDefinitionIdentifier(blocDefinition) as string}`, blocDefinition, {
+    return this.http.put<IBlocDefinition>(`${this.resourceUrl}/${getBlocDefinitionIdentifier(blocDefinition) as number}`, blocDefinition, {
       observe: 'response',
     });
   }
 
   partialUpdate(blocDefinition: IBlocDefinition): Observable<EntityResponseType> {
     return this.http.patch<IBlocDefinition>(
-      `${this.resourceUrl}/${getBlocDefinitionIdentifier(blocDefinition) as string}`,
+      `${this.resourceUrl}/${getBlocDefinitionIdentifier(blocDefinition) as number}`,
       blocDefinition,
       { observe: 'response' }
     );
   }
 
-  find(id: string): Observable<EntityResponseType> {
+  find(id: number): Observable<EntityResponseType> {
     return this.http.get<IBlocDefinition>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
@@ -43,7 +43,7 @@ export class BlocDefinitionService {
     return this.http.get<IBlocDefinition[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
-  delete(id: string): Observable<HttpResponse<{}>> {
+  delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 

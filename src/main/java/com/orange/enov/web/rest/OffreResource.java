@@ -56,7 +56,7 @@ public class OffreResource {
         Offre result = offreRepository.save(offre);
         return ResponseEntity
             .created(new URI("/api/offres/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -71,10 +71,8 @@ public class OffreResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/offres/{id}")
-    public ResponseEntity<Offre> updateOffre(
-        @PathVariable(value = "id", required = false) final String id,
-        @Valid @RequestBody Offre offre
-    ) throws URISyntaxException {
+    public ResponseEntity<Offre> updateOffre(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody Offre offre)
+        throws URISyntaxException {
         log.debug("REST request to update Offre : {}, {}", id, offre);
         if (offre.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -90,7 +88,7 @@ public class OffreResource {
         Offre result = offreRepository.save(offre);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, offre.getId()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, offre.getId().toString()))
             .body(result);
     }
 
@@ -107,7 +105,7 @@ public class OffreResource {
      */
     @PatchMapping(value = "/offres/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<Offre> partialUpdateOffre(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Offre offre
     ) throws URISyntaxException {
         log.debug("REST request to partial update Offre partially : {}, {}", id, offre);
@@ -136,7 +134,10 @@ public class OffreResource {
             })
             .map(offreRepository::save);
 
-        return ResponseUtil.wrapOrNotFound(result, HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, offre.getId()));
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, offre.getId().toString())
+        );
     }
 
     /**
@@ -157,7 +158,7 @@ public class OffreResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the offre, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/offres/{id}")
-    public ResponseEntity<Offre> getOffre(@PathVariable String id) {
+    public ResponseEntity<Offre> getOffre(@PathVariable Long id) {
         log.debug("REST request to get Offre : {}", id);
         Optional<Offre> offre = offreRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(offre);
@@ -170,9 +171,12 @@ public class OffreResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/offres/{id}")
-    public ResponseEntity<Void> deleteOffre(@PathVariable String id) {
+    public ResponseEntity<Void> deleteOffre(@PathVariable Long id) {
         log.debug("REST request to delete Offre : {}", id);
         offreRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

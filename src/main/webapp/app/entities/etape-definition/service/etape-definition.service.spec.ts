@@ -20,7 +20,7 @@ describe('EtapeDefinition Service', () => {
     httpMock = TestBed.inject(HttpTestingController);
 
     elemDefault = {
-      id: 'AAAAAAA',
+      id: 0,
       name: 'AAAAAAA',
       label: 'AAAAAAA',
     };
@@ -30,7 +30,7 @@ describe('EtapeDefinition Service', () => {
     it('should find an element', () => {
       const returnedFromService = Object.assign({}, elemDefault);
 
-      service.find('ABC').subscribe(resp => (expectedResult = resp.body));
+      service.find(123).subscribe(resp => (expectedResult = resp.body));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -40,7 +40,7 @@ describe('EtapeDefinition Service', () => {
     it('should create a EtapeDefinition', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'ID',
+          id: 0,
         },
         elemDefault
       );
@@ -57,7 +57,7 @@ describe('EtapeDefinition Service', () => {
     it('should update a EtapeDefinition', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'BBBBBB',
+          id: 1,
           name: 'BBBBBB',
           label: 'BBBBBB',
         },
@@ -95,7 +95,7 @@ describe('EtapeDefinition Service', () => {
     it('should return a list of EtapeDefinition', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'BBBBBB',
+          id: 1,
           name: 'BBBBBB',
           label: 'BBBBBB',
         },
@@ -113,7 +113,7 @@ describe('EtapeDefinition Service', () => {
     });
 
     it('should delete a EtapeDefinition', () => {
-      service.delete('ABC').subscribe(resp => (expectedResult = resp.ok));
+      service.delete(123).subscribe(resp => (expectedResult = resp.ok));
 
       const req = httpMock.expectOne({ method: 'DELETE' });
       req.flush({ status: 200 });
@@ -122,42 +122,42 @@ describe('EtapeDefinition Service', () => {
 
     describe('addEtapeDefinitionToCollectionIfMissing', () => {
       it('should add a EtapeDefinition to an empty array', () => {
-        const etapeDefinition: IEtapeDefinition = { id: 'ABC' };
+        const etapeDefinition: IEtapeDefinition = { id: 123 };
         expectedResult = service.addEtapeDefinitionToCollectionIfMissing([], etapeDefinition);
         expect(expectedResult).toHaveLength(1);
         expect(expectedResult).toContain(etapeDefinition);
       });
 
       it('should not add a EtapeDefinition to an array that contains it', () => {
-        const etapeDefinition: IEtapeDefinition = { id: 'ABC' };
+        const etapeDefinition: IEtapeDefinition = { id: 123 };
         const etapeDefinitionCollection: IEtapeDefinition[] = [
           {
             ...etapeDefinition,
           },
-          { id: 'CBA' },
+          { id: 456 },
         ];
         expectedResult = service.addEtapeDefinitionToCollectionIfMissing(etapeDefinitionCollection, etapeDefinition);
         expect(expectedResult).toHaveLength(2);
       });
 
       it("should add a EtapeDefinition to an array that doesn't contain it", () => {
-        const etapeDefinition: IEtapeDefinition = { id: 'ABC' };
-        const etapeDefinitionCollection: IEtapeDefinition[] = [{ id: 'CBA' }];
+        const etapeDefinition: IEtapeDefinition = { id: 123 };
+        const etapeDefinitionCollection: IEtapeDefinition[] = [{ id: 456 }];
         expectedResult = service.addEtapeDefinitionToCollectionIfMissing(etapeDefinitionCollection, etapeDefinition);
         expect(expectedResult).toHaveLength(2);
         expect(expectedResult).toContain(etapeDefinition);
       });
 
       it('should add only unique EtapeDefinition to an array', () => {
-        const etapeDefinitionArray: IEtapeDefinition[] = [{ id: 'ABC' }, { id: 'CBA' }, { id: '9e623c61-38b1-412d-96e5-e1af4d58b4a6' }];
-        const etapeDefinitionCollection: IEtapeDefinition[] = [{ id: 'ABC' }];
+        const etapeDefinitionArray: IEtapeDefinition[] = [{ id: 123 }, { id: 456 }, { id: 61726 }];
+        const etapeDefinitionCollection: IEtapeDefinition[] = [{ id: 123 }];
         expectedResult = service.addEtapeDefinitionToCollectionIfMissing(etapeDefinitionCollection, ...etapeDefinitionArray);
         expect(expectedResult).toHaveLength(3);
       });
 
       it('should accept varargs', () => {
-        const etapeDefinition: IEtapeDefinition = { id: 'ABC' };
-        const etapeDefinition2: IEtapeDefinition = { id: 'CBA' };
+        const etapeDefinition: IEtapeDefinition = { id: 123 };
+        const etapeDefinition2: IEtapeDefinition = { id: 456 };
         expectedResult = service.addEtapeDefinitionToCollectionIfMissing([], etapeDefinition, etapeDefinition2);
         expect(expectedResult).toHaveLength(2);
         expect(expectedResult).toContain(etapeDefinition);
@@ -165,14 +165,14 @@ describe('EtapeDefinition Service', () => {
       });
 
       it('should accept null and undefined values', () => {
-        const etapeDefinition: IEtapeDefinition = { id: 'ABC' };
+        const etapeDefinition: IEtapeDefinition = { id: 123 };
         expectedResult = service.addEtapeDefinitionToCollectionIfMissing([], null, etapeDefinition, undefined);
         expect(expectedResult).toHaveLength(1);
         expect(expectedResult).toContain(etapeDefinition);
       });
 
       it('should return initial array if no EtapeDefinition is added', () => {
-        const etapeDefinitionCollection: IEtapeDefinition[] = [{ id: 'ABC' }];
+        const etapeDefinitionCollection: IEtapeDefinition[] = [{ id: 123 }];
         expectedResult = service.addEtapeDefinitionToCollectionIfMissing(etapeDefinitionCollection, undefined, null);
         expect(expectedResult).toEqual(etapeDefinitionCollection);
       });

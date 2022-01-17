@@ -25,16 +25,17 @@ public class OffreParcoursComposition implements Serializable {
     @Column(name = "start")
     private Boolean start;
 
+    @JsonIgnoreProperties(value = { "parcoursDefinitions", "businessUnit" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private Offre offre;
 
-    @JsonIgnoreProperties(value = { "etapeDefinitions" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "etapeDefinitions", "offre" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private ParcoursDefinition parcoursParent;
 
-    @JsonIgnoreProperties(value = { "etapeDefinitions" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "etapeDefinitions", "offre" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private ParcoursDefinition parcoursChild;

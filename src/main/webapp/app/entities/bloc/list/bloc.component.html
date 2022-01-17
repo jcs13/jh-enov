@@ -37,6 +37,8 @@
           <th scope="col"><span>Label</span></th>
           <th scope="col"><span>Element Name</span></th>
           <th scope="col"><span>Element Path</span></th>
+          <th scope="col"><span>Etape Definition Id</span></th>
+          <th scope="col"><span>Bloc Definition Id</span></th>
           <th scope="col"><span>Display</span></th>
           <th scope="col"><span>Etape</span></th>
           <th scope="col"></th>
@@ -51,6 +53,8 @@
           <td>{{ bloc.label }}</td>
           <td>{{ bloc.elementName }}</td>
           <td>{{ bloc.elementPath }}</td>
+          <td>{{ bloc.etapeDefinitionId }}</td>
+          <td>{{ bloc.blocDefinitionId }}</td>
           <td>{{ bloc.display }}</td>
           <td>
             <div *ngIf="bloc.etape">

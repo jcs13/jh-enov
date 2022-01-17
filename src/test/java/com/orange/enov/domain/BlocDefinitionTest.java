@@ -11,11 +11,11 @@ class BlocDefinitionTest {
     void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(BlocDefinition.class);
         BlocDefinition blocDefinition1 = new BlocDefinition();
-        blocDefinition1.setId("id1");
+        blocDefinition1.setId(1L);
         BlocDefinition blocDefinition2 = new BlocDefinition();
         blocDefinition2.setId(blocDefinition1.getId());
         assertThat(blocDefinition1).isEqualTo(blocDefinition2);
-        blocDefinition2.setId("id2");
+        blocDefinition2.setId(2L);
         assertThat(blocDefinition1).isNotEqualTo(blocDefinition2);
         blocDefinition1.setId(null);
         assertThat(blocDefinition1).isNotEqualTo(blocDefinition2);

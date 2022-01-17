@@ -21,8 +21,10 @@ public class Parcours implements Serializable {
 
     @NotNull
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id", nullable = false)
-    private String id;
+    private Long id;
 
     @NotNull
     @Column(name = "name", nullable = false)
@@ -41,18 +43,22 @@ public class Parcours implements Serializable {
     @JsonIgnoreProperties(value = { "blocs", "parcours" }, allowSetters = true)
     private Set<Etape> etapes = new HashSet<>();
 
+    @JsonIgnoreProperties(value = { "parcours", "parent" }, allowSetters = true)
+    @OneToOne(mappedBy = "parcours")
+    private Simulation simulation;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public String getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public Parcours id(String id) {
+    public Parcours id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -123,6 +129,25 @@ public class Parcours implements Serializable {
     public Parcours removeEtape(Etape etape) {
         this.etapes.remove(etape);
         etape.setParcours(null);
+        return this;
+    }
+
+    public Simulation getSimulation() {
+        return this.simulation;
+    }
+
+    public void setSimulation(Simulation simulation) {
+        if (this.simulation != null) {
+            this.simulation.setParcours(null);
+        }
+        if (simulation != null) {
+            simulation.setParcours(this);
+        }
+        this.simulation = simulation;
+    }
+
+    public Parcours simulation(Simulation simulation) {
+        this.setSimulation(simulation);
         return this;
     }
 

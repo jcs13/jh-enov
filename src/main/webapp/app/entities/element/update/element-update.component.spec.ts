@@ -43,7 +43,7 @@ describe('Element Management Update Component', () => {
 
   describe('ngOnInit', () => {
     it('Should update editForm', () => {
-      const element: IElement = { id: 'CBA' };
+      const element: IElement = { id: 456 };
 
       activatedRoute.data = of({ element });
       comp.ngOnInit();
@@ -56,7 +56,7 @@ describe('Element Management Update Component', () => {
     it('Should call update service on save for existing entity', () => {
       // GIVEN
       const saveSubject = new Subject<HttpResponse<Element>>();
-      const element = { id: 'ABC' };
+      const element = { id: 123 };
       jest.spyOn(elementService, 'update').mockReturnValue(saveSubject);
       jest.spyOn(comp, 'previousState');
       activatedRoute.data = of({ element });
@@ -98,7 +98,7 @@ describe('Element Management Update Component', () => {
     it('Should set isSaving to false on error', () => {
       // GIVEN
       const saveSubject = new Subject<HttpResponse<Element>>();
-      const element = { id: 'ABC' };
+      const element = { id: 123 };
       jest.spyOn(elementService, 'update').mockReturnValue(saveSubject);
       jest.spyOn(comp, 'previousState');
       activatedRoute.data = of({ element });

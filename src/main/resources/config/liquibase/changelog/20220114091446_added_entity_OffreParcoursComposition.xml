@@ -17,13 +17,13 @@
             <column name="start" type="boolean">
                 <constraints nullable="true" />
             </column>
-            <column name="offre_id" type="varchar(255)">
+            <column name="offre_id" type="bigint">
                 <constraints nullable="true" unique="true" uniqueConstraintName="ux_offre_parcours_composition__offre_id" />
             </column>
-            <column name="parcours_parent_id" type="varchar(255)">
+            <column name="parcours_parent_id" type="bigint">
                 <constraints nullable="true" unique="true" uniqueConstraintName="ux_offre_parcours_composition__parcours_parent_id" />
             </column>
-            <column name="parcours_child_id" type="varchar(255)">
+            <column name="parcours_child_id" type="bigint">
                 <constraints nullable="true" unique="true" uniqueConstraintName="ux_offre_parcours_composition__parcours_child_id" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->

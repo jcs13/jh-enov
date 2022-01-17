@@ -55,9 +55,13 @@
       "EtapeOrder",
       "BlocDefinition",
       "Element",
-      "BlocOrder"
+      "BlocOrder",
+      "Simulation",
+      "ParcoursComposition",
+      "EtapeTransition",
+      "BlocTransition"
     ],
-    "lastLiquibaseTimestamp": 1642151692000
+    "lastLiquibaseTimestamp": 1642430755000
   },
   "git-provider": "GitHub",
   "git-company": "jcs13",

@@ -3,7 +3,7 @@
   "fields": [
     {
       "fieldName": "id",
-      "fieldType": "String",
+      "fieldType": "Long",
       "fieldValidateRules": ["required"]
     },
     {
@@ -22,7 +22,14 @@
       "fieldValidateRules": ["required"]
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "offre",
+      "otherEntityRelationshipName": "businessUnit",
+      "relationshipName": "offre"
+    }
+  ],
   "entityTableName": "business_unit",
   "dto": "no",
   "pagination": "no",

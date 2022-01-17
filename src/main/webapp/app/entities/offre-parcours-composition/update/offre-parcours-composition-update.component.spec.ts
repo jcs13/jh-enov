@@ -52,10 +52,10 @@ describe('OffreParcoursComposition Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call offre query and add missing value', () => {
       const offreParcoursComposition: IOffreParcoursComposition = { id: 456 };
-      const offre: IOffre = { id: 'e9a82e83-837c-448d-88c6-347de9bbebc6' };
+      const offre: IOffre = { id: 92436 };
       offreParcoursComposition.offre = offre;
 
-      const offreCollection: IOffre[] = [{ id: 'dc347a91-bb97-41af-97e6-986f62f6a8c1' }];
+      const offreCollection: IOffre[] = [{ id: 61636 }];
       jest.spyOn(offreService, 'query').mockReturnValue(of(new HttpResponse({ body: offreCollection })));
       const expectedCollection: IOffre[] = [offre, ...offreCollection];
       jest.spyOn(offreService, 'addOffreToCollectionIfMissing').mockReturnValue(expectedCollection);
@@ -70,10 +70,10 @@ describe('OffreParcoursComposition Management Update Component', () => {
 
     it('Should call parcoursParent query and add missing value', () => {
       const offreParcoursComposition: IOffreParcoursComposition = { id: 456 };
-      const parcoursParent: IParcoursDefinition = { id: '19235ab5-2aa1-4eab-a1ae-4765289a4ebc' };
+      const parcoursParent: IParcoursDefinition = { id: 12368 };
       offreParcoursComposition.parcoursParent = parcoursParent;
 
-      const parcoursParentCollection: IParcoursDefinition[] = [{ id: '0af02cbb-b01a-4650-884c-1955caa20b1a' }];
+      const parcoursParentCollection: IParcoursDefinition[] = [{ id: 62301 }];
       jest.spyOn(parcoursDefinitionService, 'query').mockReturnValue(of(new HttpResponse({ body: parcoursParentCollection })));
       const expectedCollection: IParcoursDefinition[] = [parcoursParent, ...parcoursParentCollection];
       jest.spyOn(parcoursDefinitionService, 'addParcoursDefinitionToCollectionIfMissing').mockReturnValue(expectedCollection);
@@ -91,10 +91,10 @@ describe('OffreParcoursComposition Management Update Component', () => {
 
     it('Should call parcoursChild query and add missing value', () => {
       const offreParcoursComposition: IOffreParcoursComposition = { id: 456 };
-      const parcoursChild: IParcoursDefinition = { id: 'd0d9dbfd-29cb-40db-b4b2-5eaddc6d062c' };
+      const parcoursChild: IParcoursDefinition = { id: 15731 };
       offreParcoursComposition.parcoursChild = parcoursChild;
 
-      const parcoursChildCollection: IParcoursDefinition[] = [{ id: 'ccc4231e-98cf-4009-9b1d-16c6d36325e5' }];
+      const parcoursChildCollection: IParcoursDefinition[] = [{ id: 24233 }];
       jest.spyOn(parcoursDefinitionService, 'query').mockReturnValue(of(new HttpResponse({ body: parcoursChildCollection })));
       const expectedCollection: IParcoursDefinition[] = [parcoursChild, ...parcoursChildCollection];
       jest.spyOn(parcoursDefinitionService, 'addParcoursDefinitionToCollectionIfMissing').mockReturnValue(expectedCollection);
@@ -112,11 +112,11 @@ describe('OffreParcoursComposition Management Update Component', () => {
 
     it('Should update editForm', () => {
       const offreParcoursComposition: IOffreParcoursComposition = { id: 456 };
-      const offre: IOffre = { id: 'e5f6c0cc-c3ee-455b-b461-d7f0ea20e2bb' };
+      const offre: IOffre = { id: 68074 };
       offreParcoursComposition.offre = offre;
-      const parcoursParent: IParcoursDefinition = { id: '884de912-4002-4caa-82c5-fc303415b6b5' };
+      const parcoursParent: IParcoursDefinition = { id: 32555 };
       offreParcoursComposition.parcoursParent = parcoursParent;
-      const parcoursChild: IParcoursDefinition = { id: '67e5d448-d74a-4649-908d-38cdba3c2479' };
+      const parcoursChild: IParcoursDefinition = { id: 66568 };
       offreParcoursComposition.parcoursChild = parcoursChild;
 
       activatedRoute.data = of({ offreParcoursComposition });
@@ -196,7 +196,7 @@ describe('OffreParcoursComposition Management Update Component', () => {
   describe('Tracking relationships identifiers', () => {
     describe('trackOffreById', () => {
       it('Should return tracked Offre primary key', () => {
-        const entity = { id: 'ABC' };
+        const entity = { id: 123 };
         const trackResult = comp.trackOffreById(0, entity);
         expect(trackResult).toEqual(entity.id);
       });
@@ -204,7 +204,7 @@ describe('OffreParcoursComposition Management Update Component', () => {
 
     describe('trackParcoursDefinitionById', () => {
       it('Should return tracked ParcoursDefinition primary key', () => {
-        const entity = { id: 'ABC' };
+        const entity = { id: 123 };
         const trackResult = comp.trackParcoursDefinitionById(0, entity);
         expect(trackResult).toEqual(entity.id);
       });

@@ -9,7 +9,8 @@ import com.orange.enov.IntegrationTest;
 import com.orange.enov.domain.ParcoursDefinition;
 import com.orange.enov.repository.ParcoursDefinitionRepository;
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ class ParcoursDefinitionResourceIT {
 
     private static final String ENTITY_API_URL = "/api/parcours-definitions";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private ParcoursDefinitionRepository parcoursDefinitionRepository;
@@ -98,7 +102,7 @@ class ParcoursDefinitionResourceIT {
     @Transactional
     void createParcoursDefinitionWithExistingId() throws Exception {
         // Create the ParcoursDefinition with an existing ID
-        parcoursDefinition.setId("existing_id");
+        parcoursDefinition.setId(1L);
 
         int databaseSizeBeforeCreate = parcoursDefinitionRepository.findAll().size();
 
@@ -156,7 +160,6 @@ class ParcoursDefinitionResourceIT {
     @Transactional
     void getAllParcoursDefinitions() throws Exception {
         // Initialize the database
-        parcoursDefinition.setId(UUID.randomUUID().toString());
         parcoursDefinitionRepository.saveAndFlush(parcoursDefinition);
 
         // Get all the parcoursDefinitionList
@@ -164,7 +167,7 @@ class ParcoursDefinitionResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(parcoursDefinition.getId())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(parcoursDefinition.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL)));
     }
@@ -173,7 +176,6 @@ class ParcoursDefinitionResourceIT {
     @Transactional
     void getParcoursDefinition() throws Exception {
         // Initialize the database
-        parcoursDefinition.setId(UUID.randomUUID().toString());
         parcoursDefinitionRepository.saveAndFlush(parcoursDefinition);
 
         // Get the parcoursDefinition
@@ -181,7 +183,7 @@ class ParcoursDefinitionResourceIT {
             .perform(get(ENTITY_API_URL_ID, parcoursDefinition.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(parcoursDefinition.getId()))
+            .andExpect(jsonPath("$.id").value(parcoursDefinition.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.label").value(DEFAULT_LABEL));
     }
@@ -197,7 +199,6 @@ class ParcoursDefinitionResourceIT {
     @Transactional
     void putNewParcoursDefinition() throws Exception {
         // Initialize the database
-        parcoursDefinition.setId(UUID.randomUUID().toString());
         parcoursDefinitionRepository.saveAndFlush(parcoursDefinition);
 
         int databaseSizeBeforeUpdate = parcoursDefinitionRepository.findAll().size();
@@ -228,7 +229,7 @@ class ParcoursDefinitionResourceIT {
     @Transactional
     void putNonExistingParcoursDefinition() throws Exception {
         int databaseSizeBeforeUpdate = parcoursDefinitionRepository.findAll().size();
-        parcoursDefinition.setId(UUID.randomUUID().toString());
+        parcoursDefinition.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restParcoursDefinitionMockMvc
@@ -248,12 +249,12 @@ class ParcoursDefinitionResourceIT {
     @Transactional
     void putWithIdMismatchParcoursDefinition() throws Exception {
         int databaseSizeBeforeUpdate = parcoursDefinitionRepository.findAll().size();
-        parcoursDefinition.setId(UUID.randomUUID().toString());
+        parcoursDefinition.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restParcoursDefinitionMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(parcoursDefinition))
             )
@@ -268,7 +269,7 @@ class ParcoursDefinitionResourceIT {
     @Transactional
     void putWithMissingIdPathParamParcoursDefinition() throws Exception {
         int databaseSizeBeforeUpdate = parcoursDefinitionRepository.findAll().size();
-        parcoursDefinition.setId(UUID.randomUUID().toString());
+        parcoursDefinition.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restParcoursDefinitionMockMvc
@@ -286,7 +287,6 @@ class ParcoursDefinitionResourceIT {
     @Transactional
     void partialUpdateParcoursDefinitionWithPatch() throws Exception {
         // Initialize the database
-        parcoursDefinition.setId(UUID.randomUUID().toString());
         parcoursDefinitionRepository.saveAndFlush(parcoursDefinition);
 
         int databaseSizeBeforeUpdate = parcoursDefinitionRepository.findAll().size();
@@ -315,7 +315,6 @@ class ParcoursDefinitionResourceIT {
     @Transactional
     void fullUpdateParcoursDefinitionWithPatch() throws Exception {
         // Initialize the database
-        parcoursDefinition.setId(UUID.randomUUID().toString());
         parcoursDefinitionRepository.saveAndFlush(parcoursDefinition);
 
         int databaseSizeBeforeUpdate = parcoursDefinitionRepository.findAll().size();
@@ -346,7 +345,7 @@ class ParcoursDefinitionResourceIT {
     @Transactional
     void patchNonExistingParcoursDefinition() throws Exception {
         int databaseSizeBeforeUpdate = parcoursDefinitionRepository.findAll().size();
-        parcoursDefinition.setId(UUID.randomUUID().toString());
+        parcoursDefinition.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restParcoursDefinitionMockMvc
@@ -366,12 +365,12 @@ class ParcoursDefinitionResourceIT {
     @Transactional
     void patchWithIdMismatchParcoursDefinition() throws Exception {
         int databaseSizeBeforeUpdate = parcoursDefinitionRepository.findAll().size();
-        parcoursDefinition.setId(UUID.randomUUID().toString());
+        parcoursDefinition.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restParcoursDefinitionMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(parcoursDefinition))
             )
@@ -386,7 +385,7 @@ class ParcoursDefinitionResourceIT {
     @Transactional
     void patchWithMissingIdPathParamParcoursDefinition() throws Exception {
         int databaseSizeBeforeUpdate = parcoursDefinitionRepository.findAll().size();
-        parcoursDefinition.setId(UUID.randomUUID().toString());
+        parcoursDefinition.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restParcoursDefinitionMockMvc
@@ -406,7 +405,6 @@ class ParcoursDefinitionResourceIT {
     @Transactional
     void deleteParcoursDefinition() throws Exception {
         // Initialize the database
-        parcoursDefinition.setId(UUID.randomUUID().toString());
         parcoursDefinitionRepository.saveAndFlush(parcoursDefinition);
 
         int databaseSizeBeforeDelete = parcoursDefinitionRepository.findAll().size();

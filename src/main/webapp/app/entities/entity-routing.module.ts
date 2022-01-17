@@ -65,6 +65,26 @@ import { RouterModule } from '@angular/router';
         data: { pageTitle: 'BlocOrders' },
         loadChildren: () => import('./bloc-order/bloc-order.module').then(m => m.BlocOrderModule),
       },
+      {
+        path: 'simulation',
+        data: { pageTitle: 'Simulations' },
+        loadChildren: () => import('./simulation/simulation.module').then(m => m.SimulationModule),
+      },
+      {
+        path: 'parcours-composition',
+        data: { pageTitle: 'ParcoursCompositions' },
+        loadChildren: () => import('./parcours-composition/parcours-composition.module').then(m => m.ParcoursCompositionModule),
+      },
+      {
+        path: 'etape-transition',
+        data: { pageTitle: 'EtapeTransitions' },
+        loadChildren: () => import('./etape-transition/etape-transition.module').then(m => m.EtapeTransitionModule),
+      },
+      {
+        path: 'bloc-transition',
+        data: { pageTitle: 'BlocTransitions' },
+        loadChildren: () => import('./bloc-transition/bloc-transition.module').then(m => m.BlocTransitionModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

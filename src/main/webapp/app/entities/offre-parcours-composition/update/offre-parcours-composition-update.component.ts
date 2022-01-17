@@ -61,11 +61,11 @@ export class OffreParcoursCompositionUpdateComponent implements OnInit {
     }
   }
 
-  trackOffreById(index: number, item: IOffre): string {
+  trackOffreById(index: number, item: IOffre): number {
     return item.id!;
   }
 
-  trackParcoursDefinitionById(index: number, item: IParcoursDefinition): string {
+  trackParcoursDefinitionById(index: number, item: IParcoursDefinition): number {
     return item.id!;
   }
 

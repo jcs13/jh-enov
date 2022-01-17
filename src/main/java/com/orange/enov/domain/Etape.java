@@ -21,8 +21,10 @@ public class Etape implements Serializable {
 
     @NotNull
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id", nullable = false)
-    private String id;
+    private Long id;
 
     @NotNull
     @Column(name = "name", nullable = false)
@@ -31,6 +33,10 @@ public class Etape implements Serializable {
     @NotNull
     @Column(name = "label", nullable = false)
     private String label;
+
+    @NotNull
+    @Column(name = "etape_definition_id", nullable = false)
+    private String etapeDefinitionId;
 
     @NotNull
     @Column(name = "display", nullable = false)
@@ -42,21 +48,21 @@ public class Etape implements Serializable {
     private Set<Bloc> blocs = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "etapes" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "etapes", "simulation" }, allowSetters = true)
     private Parcours parcours;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public String getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public Etape id(String id) {
+    public Etape id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -84,6 +90,19 @@ public class Etape implements Serializable {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public String getEtapeDefinitionId() {
+        return this.etapeDefinitionId;
+    }
+
+    public Etape etapeDefinitionId(String etapeDefinitionId) {
+        this.setEtapeDefinitionId(etapeDefinitionId);
+        return this;
+    }
+
+    public void setEtapeDefinitionId(String etapeDefinitionId) {
+        this.etapeDefinitionId = etapeDefinitionId;
     }
 
     public Boolean getDisplay() {
@@ -169,6 +188,7 @@ public class Etape implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", label='" + getLabel() + "'" +
+            ", etapeDefinitionId='" + getEtapeDefinitionId() + "'" +
             ", display='" + getDisplay() + "'" +
             "}";
     }

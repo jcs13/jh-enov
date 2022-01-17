@@ -60,11 +60,11 @@ export class BlocDefinitionUpdateComponent implements OnInit {
     }
   }
 
-  trackElementById(index: number, item: IElement): string {
+  trackElementById(index: number, item: IElement): number {
     return item.id!;
   }
 
-  trackEtapeDefinitionById(index: number, item: IEtapeDefinition): string {
+  trackEtapeDefinitionById(index: number, item: IEtapeDefinition): number {
     return item.id!;
   }
 

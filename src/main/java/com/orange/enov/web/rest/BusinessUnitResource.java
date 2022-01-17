@@ -56,7 +56,7 @@ public class BusinessUnitResource {
         BusinessUnit result = businessUnitRepository.save(businessUnit);
         return ResponseEntity
             .created(new URI("/api/business-units/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -72,7 +72,7 @@ public class BusinessUnitResource {
      */
     @PutMapping("/business-units/{id}")
     public ResponseEntity<BusinessUnit> updateBusinessUnit(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody BusinessUnit businessUnit
     ) throws URISyntaxException {
         log.debug("REST request to update BusinessUnit : {}, {}", id, businessUnit);
@@ -90,7 +90,7 @@ public class BusinessUnitResource {
         BusinessUnit result = businessUnitRepository.save(businessUnit);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, businessUnit.getId()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, businessUnit.getId().toString()))
             .body(result);
     }
 
@@ -107,7 +107,7 @@ public class BusinessUnitResource {
      */
     @PatchMapping(value = "/business-units/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<BusinessUnit> partialUpdateBusinessUnit(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody BusinessUnit businessUnit
     ) throws URISyntaxException {
         log.debug("REST request to partial update BusinessUnit partially : {}, {}", id, businessUnit);
@@ -141,7 +141,7 @@ public class BusinessUnitResource {
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, businessUnit.getId())
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, businessUnit.getId().toString())
         );
     }
 
@@ -163,7 +163,7 @@ public class BusinessUnitResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the businessUnit, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/business-units/{id}")
-    public ResponseEntity<BusinessUnit> getBusinessUnit(@PathVariable String id) {
+    public ResponseEntity<BusinessUnit> getBusinessUnit(@PathVariable Long id) {
         log.debug("REST request to get BusinessUnit : {}", id);
         Optional<BusinessUnit> businessUnit = businessUnitRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(businessUnit);
@@ -176,9 +176,12 @@ public class BusinessUnitResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/business-units/{id}")
-    public ResponseEntity<Void> deleteBusinessUnit(@PathVariable String id) {
+    public ResponseEntity<Void> deleteBusinessUnit(@PathVariable Long id) {
         log.debug("REST request to delete BusinessUnit : {}", id);
         businessUnitRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

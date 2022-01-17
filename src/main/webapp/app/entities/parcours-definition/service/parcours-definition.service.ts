@@ -22,7 +22,7 @@ export class ParcoursDefinitionService {
 
   update(parcoursDefinition: IParcoursDefinition): Observable<EntityResponseType> {
     return this.http.put<IParcoursDefinition>(
-      `${this.resourceUrl}/${getParcoursDefinitionIdentifier(parcoursDefinition) as string}`,
+      `${this.resourceUrl}/${getParcoursDefinitionIdentifier(parcoursDefinition) as number}`,
       parcoursDefinition,
       { observe: 'response' }
     );
@@ -30,13 +30,13 @@ export class ParcoursDefinitionService {
 
   partialUpdate(parcoursDefinition: IParcoursDefinition): Observable<EntityResponseType> {
     return this.http.patch<IParcoursDefinition>(
-      `${this.resourceUrl}/${getParcoursDefinitionIdentifier(parcoursDefinition) as string}`,
+      `${this.resourceUrl}/${getParcoursDefinitionIdentifier(parcoursDefinition) as number}`,
       parcoursDefinition,
       { observe: 'response' }
     );
   }
 
-  find(id: string): Observable<EntityResponseType> {
+  find(id: number): Observable<EntityResponseType> {
     return this.http.get<IParcoursDefinition>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
@@ -45,7 +45,7 @@ export class ParcoursDefinitionService {
     return this.http.get<IParcoursDefinition[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
-  delete(id: string): Observable<HttpResponse<{}>> {
+  delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 

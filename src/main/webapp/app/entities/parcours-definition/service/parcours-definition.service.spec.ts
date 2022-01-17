@@ -20,7 +20,7 @@ describe('ParcoursDefinition Service', () => {
     httpMock = TestBed.inject(HttpTestingController);
 
     elemDefault = {
-      id: 'AAAAAAA',
+      id: 0,
       name: 'AAAAAAA',
       label: 'AAAAAAA',
     };
@@ -30,7 +30,7 @@ describe('ParcoursDefinition Service', () => {
     it('should find an element', () => {
       const returnedFromService = Object.assign({}, elemDefault);
 
-      service.find('ABC').subscribe(resp => (expectedResult = resp.body));
+      service.find(123).subscribe(resp => (expectedResult = resp.body));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -40,7 +40,7 @@ describe('ParcoursDefinition Service', () => {
     it('should create a ParcoursDefinition', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'ID',
+          id: 0,
         },
         elemDefault
       );
@@ -57,7 +57,7 @@ describe('ParcoursDefinition Service', () => {
     it('should update a ParcoursDefinition', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'BBBBBB',
+          id: 1,
           name: 'BBBBBB',
           label: 'BBBBBB',
         },
@@ -90,7 +90,7 @@ describe('ParcoursDefinition Service', () => {
     it('should return a list of ParcoursDefinition', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'BBBBBB',
+          id: 1,
           name: 'BBBBBB',
           label: 'BBBBBB',
         },
@@ -108,7 +108,7 @@ describe('ParcoursDefinition Service', () => {
     });
 
     it('should delete a ParcoursDefinition', () => {
-      service.delete('ABC').subscribe(resp => (expectedResult = resp.ok));
+      service.delete(123).subscribe(resp => (expectedResult = resp.ok));
 
       const req = httpMock.expectOne({ method: 'DELETE' });
       req.flush({ status: 200 });
@@ -117,46 +117,42 @@ describe('ParcoursDefinition Service', () => {
 
     describe('addParcoursDefinitionToCollectionIfMissing', () => {
       it('should add a ParcoursDefinition to an empty array', () => {
-        const parcoursDefinition: IParcoursDefinition = { id: 'ABC' };
+        const parcoursDefinition: IParcoursDefinition = { id: 123 };
         expectedResult = service.addParcoursDefinitionToCollectionIfMissing([], parcoursDefinition);
         expect(expectedResult).toHaveLength(1);
         expect(expectedResult).toContain(parcoursDefinition);
       });
 
       it('should not add a ParcoursDefinition to an array that contains it', () => {
-        const parcoursDefinition: IParcoursDefinition = { id: 'ABC' };
+        const parcoursDefinition: IParcoursDefinition = { id: 123 };
         const parcoursDefinitionCollection: IParcoursDefinition[] = [
           {
             ...parcoursDefinition,
           },
-          { id: 'CBA' },
+          { id: 456 },
         ];
         expectedResult = service.addParcoursDefinitionToCollectionIfMissing(parcoursDefinitionCollection, parcoursDefinition);
         expect(expectedResult).toHaveLength(2);
       });
 
       it("should add a ParcoursDefinition to an array that doesn't contain it", () => {
-        const parcoursDefinition: IParcoursDefinition = { id: 'ABC' };
-        const parcoursDefinitionCollection: IParcoursDefinition[] = [{ id: 'CBA' }];
+        const parcoursDefinition: IParcoursDefinition = { id: 123 };
+        const parcoursDefinitionCollection: IParcoursDefinition[] = [{ id: 456 }];
         expectedResult = service.addParcoursDefinitionToCollectionIfMissing(parcoursDefinitionCollection, parcoursDefinition);
         expect(expectedResult).toHaveLength(2);
         expect(expectedResult).toContain(parcoursDefinition);
       });
 
       it('should add only unique ParcoursDefinition to an array', () => {
-        const parcoursDefinitionArray: IParcoursDefinition[] = [
-          { id: 'ABC' },
-          { id: 'CBA' },
-          { id: 'a77a7d4f-bcb6-4b64-bb12-ef3f358dcba1' },
-        ];
-        const parcoursDefinitionCollection: IParcoursDefinition[] = [{ id: 'ABC' }];
+        const parcoursDefinitionArray: IParcoursDefinition[] = [{ id: 123 }, { id: 456 }, { id: 66527 }];
+        const parcoursDefinitionCollection: IParcoursDefinition[] = [{ id: 123 }];
         expectedResult = service.addParcoursDefinitionToCollectionIfMissing(parcoursDefinitionCollection, ...parcoursDefinitionArray);
         expect(expectedResult).toHaveLength(3);
       });
 
       it('should accept varargs', () => {
-        const parcoursDefinition: IParcoursDefinition = { id: 'ABC' };
-        const parcoursDefinition2: IParcoursDefinition = { id: 'CBA' };
+        const parcoursDefinition: IParcoursDefinition = { id: 123 };
+        const parcoursDefinition2: IParcoursDefinition = { id: 456 };
         expectedResult = service.addParcoursDefinitionToCollectionIfMissing([], parcoursDefinition, parcoursDefinition2);
         expect(expectedResult).toHaveLength(2);
         expect(expectedResult).toContain(parcoursDefinition);
@@ -164,14 +160,14 @@ describe('ParcoursDefinition Service', () => {
       });
 
       it('should accept null and undefined values', () => {
-        const parcoursDefinition: IParcoursDefinition = { id: 'ABC' };
+        const parcoursDefinition: IParcoursDefinition = { id: 123 };
         expectedResult = service.addParcoursDefinitionToCollectionIfMissing([], null, parcoursDefinition, undefined);
         expect(expectedResult).toHaveLength(1);
         expect(expectedResult).toContain(parcoursDefinition);
       });
 
       it('should return initial array if no ParcoursDefinition is added', () => {
-        const parcoursDefinitionCollection: IParcoursDefinition[] = [{ id: 'ABC' }];
+        const parcoursDefinitionCollection: IParcoursDefinition[] = [{ id: 123 }];
         expectedResult = service.addParcoursDefinitionToCollectionIfMissing(parcoursDefinitionCollection, undefined, null);
         expect(expectedResult).toEqual(parcoursDefinitionCollection);
       });

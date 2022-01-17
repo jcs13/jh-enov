@@ -57,7 +57,7 @@ public class EtapeDefinitionResource {
         EtapeDefinition result = etapeDefinitionRepository.save(etapeDefinition);
         return ResponseEntity
             .created(new URI("/api/etape-definitions/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -73,7 +73,7 @@ public class EtapeDefinitionResource {
      */
     @PutMapping("/etape-definitions/{id}")
     public ResponseEntity<EtapeDefinition> updateEtapeDefinition(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody EtapeDefinition etapeDefinition
     ) throws URISyntaxException {
         log.debug("REST request to update EtapeDefinition : {}, {}", id, etapeDefinition);
@@ -91,7 +91,7 @@ public class EtapeDefinitionResource {
         EtapeDefinition result = etapeDefinitionRepository.save(etapeDefinition);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, etapeDefinition.getId()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, etapeDefinition.getId().toString()))
             .body(result);
     }
 
@@ -108,7 +108,7 @@ public class EtapeDefinitionResource {
      */
     @PatchMapping(value = "/etape-definitions/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<EtapeDefinition> partialUpdateEtapeDefinition(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody EtapeDefinition etapeDefinition
     ) throws URISyntaxException {
         log.debug("REST request to partial update EtapeDefinition partially : {}, {}", id, etapeDefinition);
@@ -139,7 +139,7 @@ public class EtapeDefinitionResource {
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, etapeDefinition.getId())
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, etapeDefinition.getId().toString())
         );
     }
 
@@ -161,7 +161,7 @@ public class EtapeDefinitionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the etapeDefinition, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/etape-definitions/{id}")
-    public ResponseEntity<EtapeDefinition> getEtapeDefinition(@PathVariable String id) {
+    public ResponseEntity<EtapeDefinition> getEtapeDefinition(@PathVariable Long id) {
         log.debug("REST request to get EtapeDefinition : {}", id);
         Optional<EtapeDefinition> etapeDefinition = etapeDefinitionRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(etapeDefinition);
@@ -174,9 +174,12 @@ public class EtapeDefinitionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/etape-definitions/{id}")
-    public ResponseEntity<Void> deleteEtapeDefinition(@PathVariable String id) {
+    public ResponseEntity<Void> deleteEtapeDefinition(@PathVariable Long id) {
         log.debug("REST request to delete EtapeDefinition : {}", id);
         etapeDefinitionRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

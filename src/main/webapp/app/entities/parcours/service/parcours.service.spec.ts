@@ -20,7 +20,7 @@ describe('Parcours Service', () => {
     httpMock = TestBed.inject(HttpTestingController);
 
     elemDefault = {
-      id: 'AAAAAAA',
+      id: 0,
       name: 'AAAAAAA',
       label: 'AAAAAAA',
       offreId: 'AAAAAAA',
@@ -31,7 +31,7 @@ describe('Parcours Service', () => {
     it('should find an element', () => {
       const returnedFromService = Object.assign({}, elemDefault);
 
-      service.find('ABC').subscribe(resp => (expectedResult = resp.body));
+      service.find(123).subscribe(resp => (expectedResult = resp.body));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -41,7 +41,7 @@ describe('Parcours Service', () => {
     it('should create a Parcours', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'ID',
+          id: 0,
         },
         elemDefault
       );
@@ -58,7 +58,7 @@ describe('Parcours Service', () => {
     it('should update a Parcours', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'BBBBBB',
+          id: 1,
           name: 'BBBBBB',
           label: 'BBBBBB',
           offreId: 'BBBBBB',
@@ -97,7 +97,7 @@ describe('Parcours Service', () => {
     it('should return a list of Parcours', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'BBBBBB',
+          id: 1,
           name: 'BBBBBB',
           label: 'BBBBBB',
           offreId: 'BBBBBB',
@@ -116,7 +116,7 @@ describe('Parcours Service', () => {
     });
 
     it('should delete a Parcours', () => {
-      service.delete('ABC').subscribe(resp => (expectedResult = resp.ok));
+      service.delete(123).subscribe(resp => (expectedResult = resp.ok));
 
       const req = httpMock.expectOne({ method: 'DELETE' });
       req.flush({ status: 200 });
@@ -125,42 +125,42 @@ describe('Parcours Service', () => {
 
     describe('addParcoursToCollectionIfMissing', () => {
       it('should add a Parcours to an empty array', () => {
-        const parcours: IParcours = { id: 'ABC' };
+        const parcours: IParcours = { id: 123 };
         expectedResult = service.addParcoursToCollectionIfMissing([], parcours);
         expect(expectedResult).toHaveLength(1);
         expect(expectedResult).toContain(parcours);
       });
 
       it('should not add a Parcours to an array that contains it', () => {
-        const parcours: IParcours = { id: 'ABC' };
+        const parcours: IParcours = { id: 123 };
         const parcoursCollection: IParcours[] = [
           {
             ...parcours,
           },
-          { id: 'CBA' },
+          { id: 456 },
         ];
         expectedResult = service.addParcoursToCollectionIfMissing(parcoursCollection, parcours);
         expect(expectedResult).toHaveLength(2);
       });
 
       it("should add a Parcours to an array that doesn't contain it", () => {
-        const parcours: IParcours = { id: 'ABC' };
-        const parcoursCollection: IParcours[] = [{ id: 'CBA' }];
+        const parcours: IParcours = { id: 123 };
+        const parcoursCollection: IParcours[] = [{ id: 456 }];
         expectedResult = service.addParcoursToCollectionIfMissing(parcoursCollection, parcours);
         expect(expectedResult).toHaveLength(2);
         expect(expectedResult).toContain(parcours);
       });
 
       it('should add only unique Parcours to an array', () => {
-        const parcoursArray: IParcours[] = [{ id: 'ABC' }, { id: 'CBA' }, { id: '8110d65d-979b-4d6a-bd4a-b05d2f52bada' }];
-        const parcoursCollection: IParcours[] = [{ id: 'ABC' }];
+        const parcoursArray: IParcours[] = [{ id: 123 }, { id: 456 }, { id: 52507 }];
+        const parcoursCollection: IParcours[] = [{ id: 123 }];
         expectedResult = service.addParcoursToCollectionIfMissing(parcoursCollection, ...parcoursArray);
         expect(expectedResult).toHaveLength(3);
       });
 
       it('should accept varargs', () => {
-        const parcours: IParcours = { id: 'ABC' };
-        const parcours2: IParcours = { id: 'CBA' };
+        const parcours: IParcours = { id: 123 };
+        const parcours2: IParcours = { id: 456 };
         expectedResult = service.addParcoursToCollectionIfMissing([], parcours, parcours2);
         expect(expectedResult).toHaveLength(2);
         expect(expectedResult).toContain(parcours);
@@ -168,14 +168,14 @@ describe('Parcours Service', () => {
       });
 
       it('should accept null and undefined values', () => {
-        const parcours: IParcours = { id: 'ABC' };
+        const parcours: IParcours = { id: 123 };
         expectedResult = service.addParcoursToCollectionIfMissing([], null, parcours, undefined);
         expect(expectedResult).toHaveLength(1);
         expect(expectedResult).toContain(parcours);
       });
 
       it('should return initial array if no Parcours is added', () => {
-        const parcoursCollection: IParcours[] = [{ id: 'ABC' }];
+        const parcoursCollection: IParcours[] = [{ id: 123 }];
         expectedResult = service.addParcoursToCollectionIfMissing(parcoursCollection, undefined, null);
         expect(expectedResult).toEqual(parcoursCollection);
       });

@@ -43,7 +43,7 @@ describe('Parcours Management Update Component', () => {
 
   describe('ngOnInit', () => {
     it('Should update editForm', () => {
-      const parcours: IParcours = { id: 'CBA' };
+      const parcours: IParcours = { id: 456 };
 
       activatedRoute.data = of({ parcours });
       comp.ngOnInit();
@@ -56,7 +56,7 @@ describe('Parcours Management Update Component', () => {
     it('Should call update service on save for existing entity', () => {
       // GIVEN
       const saveSubject = new Subject<HttpResponse<Parcours>>();
-      const parcours = { id: 'ABC' };
+      const parcours = { id: 123 };
       jest.spyOn(parcoursService, 'update').mockReturnValue(saveSubject);
       jest.spyOn(comp, 'previousState');
       activatedRoute.data = of({ parcours });
@@ -98,7 +98,7 @@ describe('Parcours Management Update Component', () => {
     it('Should set isSaving to false on error', () => {
       // GIVEN
       const saveSubject = new Subject<HttpResponse<Parcours>>();
-      const parcours = { id: 'ABC' };
+      const parcours = { id: 123 };
       jest.spyOn(parcoursService, 'update').mockReturnValue(saveSubject);
       jest.spyOn(comp, 'previousState');
       activatedRoute.data = of({ parcours });

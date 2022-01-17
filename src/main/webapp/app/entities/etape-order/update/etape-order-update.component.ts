@@ -61,11 +61,11 @@ export class EtapeOrderUpdateComponent implements OnInit {
     }
   }
 
-  trackParcoursDefinitionById(index: number, item: IParcoursDefinition): string {
+  trackParcoursDefinitionById(index: number, item: IParcoursDefinition): number {
     return item.id!;
   }
 
-  trackEtapeDefinitionById(index: number, item: IEtapeDefinition): string {
+  trackEtapeDefinitionById(index: number, item: IEtapeDefinition): number {
     return item.id!;
   }
 

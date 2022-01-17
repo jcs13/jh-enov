@@ -3,7 +3,7 @@
   "fields": [
     {
       "fieldName": "id",
-      "fieldType": "String",
+      "fieldType": "Long",
       "fieldValidateRules": ["required"]
     },
     {
@@ -23,6 +23,12 @@
       "otherEntityName": "etapeDefinition",
       "otherEntityRelationshipName": "parcoursDefinition",
       "relationshipName": "etapeDefinition"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "offre",
+      "otherEntityRelationshipName": "parcoursDefinition",
+      "relationshipName": "offre"
     }
   ],
   "entityTableName": "parcours_definition",

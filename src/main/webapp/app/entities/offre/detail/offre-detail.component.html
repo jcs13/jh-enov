@@ -22,6 +22,12 @@
         <dd>
           <span>{{ offre.label }}</span>
         </dd>
+        <dt><span>Business Unit</span></dt>
+        <dd>
+          <div *ngIf="offre.businessUnit">
+            <a [routerLink]="['/business-unit', offre.businessUnit?.id, 'view']">{{ offre.businessUnit?.id }}</a>
+          </div>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

@@ -14,7 +14,7 @@ describe('ParcoursDefinition Management Detail Component', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { data: of({ parcoursDefinition: { id: 'ABC' } }) },
+          useValue: { data: of({ parcoursDefinition: { id: 123 } }) },
         },
       ],
     })
@@ -30,7 +30,7 @@ describe('ParcoursDefinition Management Detail Component', () => {
       comp.ngOnInit();
 
       // THEN
-      expect(comp.parcoursDefinition).toEqual(expect.objectContaining({ id: 'ABC' }));
+      expect(comp.parcoursDefinition).toEqual(expect.objectContaining({ id: 123 }));
     });
   });
 });
