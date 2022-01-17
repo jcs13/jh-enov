@@ -1,30 +1,46 @@
+entity Simulation {
+	id Integer required
+    name String required
+    affaire String 
+    client String 
+    parc String 
+    adresseInstallation String 
+    status String 
+    created LocalDate required
+    modifier LocalDate
+    
+    
+}
+
+relationship OneToOne {
+	Simulation to Parcours
+    Simulation{parent} to Simulation
+}
+
 
 entity Parcours {
-	id String required
+	id Integer required
     name String required
     label String required
     offreId String required
 }
 
-entity Offre {
-	id String required
-    name String required
-    label String required
-}
-
 entity Etape {
-	id String required
+	id Integer required
     name String required
     label String required
+    etapeDefinitionId String required
     display Boolean required
 }
 
 entity Bloc {
-	id String required
+	id Integer required
     name String required
     label String required
     elementName String required
     elementPath String required
+    etapeDefinitionId String required
+    blocDefinitionId String required
 	display Boolean required
 }
 
@@ -35,53 +51,53 @@ relationship OneToMany {
 
 
 entity BusinessUnit {
-	id String required
+	id Integer required
     code String required
     name String required
     label String required
 }
 
 entity Offre {
-	id String required
+	id Integer required
     name String required
     label String required
 }
 
-entity OffreParcoursComposition {
-    start Boolean
+entity ParcoursComposition {
+    inheritanceOrder Integer required
 }
 
 relationship OneToOne {
-	OffreParcoursComposition{offre} to Offre
-	OffreParcoursComposition{parcoursParent} to ParcoursDefinition
-	OffreParcoursComposition{parcoursChild} to ParcoursDefinition
+	ParcoursComposition{offre} to Offre
+	ParcoursComposition{parcoursParent} to ParcoursDefinition
+	ParcoursComposition{parcoursChild} to ParcoursDefinition
 }
 
 entity ParcoursDefinition {
-	id String required
+	id Integer required
     name String required
     label String required
 }
 
 entity EtapeDefinition {
-	id String required
+	id Integer required
     name String required
     label String required
 }
 
 
-entity EtapeOrder {
-    start Boolean
+entity EtapeTransition {
+    transition Integer required
 }
 
 relationship OneToOne {
-	EtapeOrder{parcoursDefinition} to ParcoursDefinition
-    EtapeOrder{current} to EtapeDefinition
-    EtapeOrder{next} to EtapeDefinition
+	EtapeTransition{parcoursDefinition} to ParcoursDefinition
+    EtapeTransition{current} to EtapeDefinition
+    EtapeTransition{next} to EtapeDefinition
 }
 
 entity BlocDefinition {
-	id String required
+	id Integer required
     name String required
     label String required
 }
@@ -93,20 +109,22 @@ entity Element {
 }
 
 
-entity BlocOrder {
-    start Boolean
+entity BlocTransition {
+    transition Integer required
 }
 
 relationship OneToOne {
-	BlocOrder{etapeDefinition} to EtapeDefinition
-    BlocOrder{current} to BlocDefinition
-    BlocOrder{next} to BlocDefinition
+	BlocTransition{etapeDefinition} to EtapeDefinition
+    BlocTransition{current} to BlocDefinition
+    BlocTransition{next} to BlocDefinition
 }
 
 
 relationship OneToMany {
 	EtapeDefinition to BlocDefinition,
 	ParcoursDefinition to EtapeDefinition,
+    Offre to ParcoursDefinition,
+    BusinessUnit to Offre
 }
 
 relationship OneToOne {
