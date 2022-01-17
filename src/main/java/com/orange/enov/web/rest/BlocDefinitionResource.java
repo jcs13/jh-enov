@@ -57,7 +57,7 @@ public class BlocDefinitionResource {
         BlocDefinition result = blocDefinitionRepository.save(blocDefinition);
         return ResponseEntity
             .created(new URI("/api/bloc-definitions/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -73,7 +73,7 @@ public class BlocDefinitionResource {
      */
     @PutMapping("/bloc-definitions/{id}")
     public ResponseEntity<BlocDefinition> updateBlocDefinition(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody BlocDefinition blocDefinition
     ) throws URISyntaxException {
         log.debug("REST request to update BlocDefinition : {}, {}", id, blocDefinition);
@@ -91,7 +91,7 @@ public class BlocDefinitionResource {
         BlocDefinition result = blocDefinitionRepository.save(blocDefinition);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, blocDefinition.getId()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, blocDefinition.getId().toString()))
             .body(result);
     }
 
@@ -108,7 +108,7 @@ public class BlocDefinitionResource {
      */
     @PatchMapping(value = "/bloc-definitions/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<BlocDefinition> partialUpdateBlocDefinition(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody BlocDefinition blocDefinition
     ) throws URISyntaxException {
         log.debug("REST request to partial update BlocDefinition partially : {}, {}", id, blocDefinition);
@@ -139,7 +139,7 @@ public class BlocDefinitionResource {
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, blocDefinition.getId())
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, blocDefinition.getId().toString())
         );
     }
 
@@ -161,7 +161,7 @@ public class BlocDefinitionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the blocDefinition, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/bloc-definitions/{id}")
-    public ResponseEntity<BlocDefinition> getBlocDefinition(@PathVariable String id) {
+    public ResponseEntity<BlocDefinition> getBlocDefinition(@PathVariable Long id) {
         log.debug("REST request to get BlocDefinition : {}", id);
         Optional<BlocDefinition> blocDefinition = blocDefinitionRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(blocDefinition);
@@ -174,9 +174,12 @@ public class BlocDefinitionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/bloc-definitions/{id}")
-    public ResponseEntity<Void> deleteBlocDefinition(@PathVariable String id) {
+    public ResponseEntity<Void> deleteBlocDefinition(@PathVariable Long id) {
         log.debug("REST request to delete BlocDefinition : {}", id);
         blocDefinitionRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

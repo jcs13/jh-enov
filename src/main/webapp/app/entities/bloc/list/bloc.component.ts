@@ -34,7 +34,7 @@ export class BlocComponent implements OnInit {
     this.loadAll();
   }
 
-  trackId(index: number, item: IBloc): string {
+  trackId(index: number, item: IBloc): number {
     return item.id!;
   }
 

@@ -21,14 +21,14 @@ export class ElementService {
   }
 
   update(element: IElement): Observable<EntityResponseType> {
-    return this.http.put<IElement>(`${this.resourceUrl}/${getElementIdentifier(element) as string}`, element, { observe: 'response' });
+    return this.http.put<IElement>(`${this.resourceUrl}/${getElementIdentifier(element) as number}`, element, { observe: 'response' });
   }
 
   partialUpdate(element: IElement): Observable<EntityResponseType> {
-    return this.http.patch<IElement>(`${this.resourceUrl}/${getElementIdentifier(element) as string}`, element, { observe: 'response' });
+    return this.http.patch<IElement>(`${this.resourceUrl}/${getElementIdentifier(element) as number}`, element, { observe: 'response' });
   }
 
-  find(id: string): Observable<EntityResponseType> {
+  find(id: number): Observable<EntityResponseType> {
     return this.http.get<IElement>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
@@ -37,7 +37,7 @@ export class ElementService {
     return this.http.get<IElement[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
-  delete(id: string): Observable<HttpResponse<{}>> {
+  delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 

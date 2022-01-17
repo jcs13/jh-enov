@@ -64,6 +64,12 @@ public class CacheConfiguration {
             createCache(cm, com.orange.enov.domain.BlocDefinition.class.getName());
             createCache(cm, com.orange.enov.domain.Element.class.getName());
             createCache(cm, com.orange.enov.domain.BlocOrder.class.getName());
+            createCache(cm, com.orange.enov.domain.Offre.class.getName() + ".parcoursDefinitions");
+            createCache(cm, com.orange.enov.domain.BusinessUnit.class.getName() + ".offres");
+            createCache(cm, com.orange.enov.domain.Simulation.class.getName());
+            createCache(cm, com.orange.enov.domain.ParcoursComposition.class.getName());
+            createCache(cm, com.orange.enov.domain.EtapeTransition.class.getName());
+            createCache(cm, com.orange.enov.domain.BlocTransition.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

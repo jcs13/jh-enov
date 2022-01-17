@@ -52,10 +52,10 @@ describe('BlocOrder Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call etapeDefinition query and add missing value', () => {
       const blocOrder: IBlocOrder = { id: 456 };
-      const etapeDefinition: IEtapeDefinition = { id: 'dfa4a154-4c3c-45f4-a7d1-9974d1c27795' };
+      const etapeDefinition: IEtapeDefinition = { id: 84691 };
       blocOrder.etapeDefinition = etapeDefinition;
 
-      const etapeDefinitionCollection: IEtapeDefinition[] = [{ id: 'de56c9d7-3578-4081-a94e-21ff8e9abfdf' }];
+      const etapeDefinitionCollection: IEtapeDefinition[] = [{ id: 98306 }];
       jest.spyOn(etapeDefinitionService, 'query').mockReturnValue(of(new HttpResponse({ body: etapeDefinitionCollection })));
       const expectedCollection: IEtapeDefinition[] = [etapeDefinition, ...etapeDefinitionCollection];
       jest.spyOn(etapeDefinitionService, 'addEtapeDefinitionToCollectionIfMissing').mockReturnValue(expectedCollection);
@@ -73,10 +73,10 @@ describe('BlocOrder Management Update Component', () => {
 
     it('Should call current query and add missing value', () => {
       const blocOrder: IBlocOrder = { id: 456 };
-      const current: IBlocDefinition = { id: '671a8e5c-eae7-4324-8a03-8e37a3e32076' };
+      const current: IBlocDefinition = { id: 37992 };
       blocOrder.current = current;
 
-      const currentCollection: IBlocDefinition[] = [{ id: '7e7a6c00-8eab-4743-a8d8-5f6b370a9c0b' }];
+      const currentCollection: IBlocDefinition[] = [{ id: 48833 }];
       jest.spyOn(blocDefinitionService, 'query').mockReturnValue(of(new HttpResponse({ body: currentCollection })));
       const expectedCollection: IBlocDefinition[] = [current, ...currentCollection];
       jest.spyOn(blocDefinitionService, 'addBlocDefinitionToCollectionIfMissing').mockReturnValue(expectedCollection);
@@ -91,10 +91,10 @@ describe('BlocOrder Management Update Component', () => {
 
     it('Should call next query and add missing value', () => {
       const blocOrder: IBlocOrder = { id: 456 };
-      const next: IBlocDefinition = { id: '1af83d2f-9d93-48d2-accf-998d83b6fc74' };
+      const next: IBlocDefinition = { id: 11842 };
       blocOrder.next = next;
 
-      const nextCollection: IBlocDefinition[] = [{ id: 'a939f512-2507-4e6e-814c-b808b4baa01b' }];
+      const nextCollection: IBlocDefinition[] = [{ id: 64961 }];
       jest.spyOn(blocDefinitionService, 'query').mockReturnValue(of(new HttpResponse({ body: nextCollection })));
       const expectedCollection: IBlocDefinition[] = [next, ...nextCollection];
       jest.spyOn(blocDefinitionService, 'addBlocDefinitionToCollectionIfMissing').mockReturnValue(expectedCollection);
@@ -109,11 +109,11 @@ describe('BlocOrder Management Update Component', () => {
 
     it('Should update editForm', () => {
       const blocOrder: IBlocOrder = { id: 456 };
-      const etapeDefinition: IEtapeDefinition = { id: 'f9212539-fa37-447f-8214-db2b48c07206' };
+      const etapeDefinition: IEtapeDefinition = { id: 66350 };
       blocOrder.etapeDefinition = etapeDefinition;
-      const current: IBlocDefinition = { id: '2e4b4e49-da41-479f-af26-c2836605c5a6' };
+      const current: IBlocDefinition = { id: 54878 };
       blocOrder.current = current;
-      const next: IBlocDefinition = { id: '1a368d4b-371c-47b0-a505-bc2498472508' };
+      const next: IBlocDefinition = { id: 90221 };
       blocOrder.next = next;
 
       activatedRoute.data = of({ blocOrder });
@@ -193,7 +193,7 @@ describe('BlocOrder Management Update Component', () => {
   describe('Tracking relationships identifiers', () => {
     describe('trackEtapeDefinitionById', () => {
       it('Should return tracked EtapeDefinition primary key', () => {
-        const entity = { id: 'ABC' };
+        const entity = { id: 123 };
         const trackResult = comp.trackEtapeDefinitionById(0, entity);
         expect(trackResult).toEqual(entity.id);
       });
@@ -201,7 +201,7 @@ describe('BlocOrder Management Update Component', () => {
 
     describe('trackBlocDefinitionById', () => {
       it('Should return tracked BlocDefinition primary key', () => {
-        const entity = { id: 'ABC' };
+        const entity = { id: 123 };
         const trackResult = comp.trackBlocDefinitionById(0, entity);
         expect(trackResult).toEqual(entity.id);
       });

@@ -35,6 +35,7 @@
           <th scope="col"><span>Id</span></th>
           <th scope="col"><span>Name</span></th>
           <th scope="col"><span>Label</span></th>
+          <th scope="col"><span>Etape Definition Id</span></th>
           <th scope="col"><span>Display</span></th>
           <th scope="col"><span>Parcours</span></th>
           <th scope="col"></th>
@@ -47,6 +48,7 @@
           </td>
           <td>{{ etape.name }}</td>
           <td>{{ etape.label }}</td>
+          <td>{{ etape.etapeDefinitionId }}</td>
           <td>{{ etape.display }}</td>
           <td>
             <div *ngIf="etape.parcours">

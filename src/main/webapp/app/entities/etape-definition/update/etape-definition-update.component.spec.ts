@@ -47,11 +47,11 @@ describe('EtapeDefinition Management Update Component', () => {
 
   describe('ngOnInit', () => {
     it('Should call ParcoursDefinition query and add missing value', () => {
-      const etapeDefinition: IEtapeDefinition = { id: 'CBA' };
-      const parcoursDefinition: IParcoursDefinition = { id: 'a0921c20-7a73-4a9b-871d-a2ab42647de4' };
+      const etapeDefinition: IEtapeDefinition = { id: 456 };
+      const parcoursDefinition: IParcoursDefinition = { id: 62673 };
       etapeDefinition.parcoursDefinition = parcoursDefinition;
 
-      const parcoursDefinitionCollection: IParcoursDefinition[] = [{ id: 'ed0f35a8-80a7-4c67-aa95-656551e742cb' }];
+      const parcoursDefinitionCollection: IParcoursDefinition[] = [{ id: 3835 }];
       jest.spyOn(parcoursDefinitionService, 'query').mockReturnValue(of(new HttpResponse({ body: parcoursDefinitionCollection })));
       const additionalParcoursDefinitions = [parcoursDefinition];
       const expectedCollection: IParcoursDefinition[] = [...additionalParcoursDefinitions, ...parcoursDefinitionCollection];
@@ -69,8 +69,8 @@ describe('EtapeDefinition Management Update Component', () => {
     });
 
     it('Should update editForm', () => {
-      const etapeDefinition: IEtapeDefinition = { id: 'CBA' };
-      const parcoursDefinition: IParcoursDefinition = { id: '36cc7a26-fc4f-48a6-a0aa-0bd1c056a746' };
+      const etapeDefinition: IEtapeDefinition = { id: 456 };
+      const parcoursDefinition: IParcoursDefinition = { id: 58954 };
       etapeDefinition.parcoursDefinition = parcoursDefinition;
 
       activatedRoute.data = of({ etapeDefinition });
@@ -85,7 +85,7 @@ describe('EtapeDefinition Management Update Component', () => {
     it('Should call update service on save for existing entity', () => {
       // GIVEN
       const saveSubject = new Subject<HttpResponse<EtapeDefinition>>();
-      const etapeDefinition = { id: 'ABC' };
+      const etapeDefinition = { id: 123 };
       jest.spyOn(etapeDefinitionService, 'update').mockReturnValue(saveSubject);
       jest.spyOn(comp, 'previousState');
       activatedRoute.data = of({ etapeDefinition });
@@ -127,7 +127,7 @@ describe('EtapeDefinition Management Update Component', () => {
     it('Should set isSaving to false on error', () => {
       // GIVEN
       const saveSubject = new Subject<HttpResponse<EtapeDefinition>>();
-      const etapeDefinition = { id: 'ABC' };
+      const etapeDefinition = { id: 123 };
       jest.spyOn(etapeDefinitionService, 'update').mockReturnValue(saveSubject);
       jest.spyOn(comp, 'previousState');
       activatedRoute.data = of({ etapeDefinition });
@@ -148,7 +148,7 @@ describe('EtapeDefinition Management Update Component', () => {
   describe('Tracking relationships identifiers', () => {
     describe('trackParcoursDefinitionById', () => {
       it('Should return tracked ParcoursDefinition primary key', () => {
-        const entity = { id: 'ABC' };
+        const entity = { id: 123 };
         const trackResult = comp.trackParcoursDefinitionById(0, entity);
         expect(trackResult).toEqual(entity.id);
       });

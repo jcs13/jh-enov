@@ -22,7 +22,7 @@ export class EtapeDefinitionService {
 
   update(etapeDefinition: IEtapeDefinition): Observable<EntityResponseType> {
     return this.http.put<IEtapeDefinition>(
-      `${this.resourceUrl}/${getEtapeDefinitionIdentifier(etapeDefinition) as string}`,
+      `${this.resourceUrl}/${getEtapeDefinitionIdentifier(etapeDefinition) as number}`,
       etapeDefinition,
       { observe: 'response' }
     );
@@ -30,13 +30,13 @@ export class EtapeDefinitionService {
 
   partialUpdate(etapeDefinition: IEtapeDefinition): Observable<EntityResponseType> {
     return this.http.patch<IEtapeDefinition>(
-      `${this.resourceUrl}/${getEtapeDefinitionIdentifier(etapeDefinition) as string}`,
+      `${this.resourceUrl}/${getEtapeDefinitionIdentifier(etapeDefinition) as number}`,
       etapeDefinition,
       { observe: 'response' }
     );
   }
 
-  find(id: string): Observable<EntityResponseType> {
+  find(id: number): Observable<EntityResponseType> {
     return this.http.get<IEtapeDefinition>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
@@ -45,7 +45,7 @@ export class EtapeDefinitionService {
     return this.http.get<IEtapeDefinition[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
-  delete(id: string): Observable<HttpResponse<{}>> {
+  delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 

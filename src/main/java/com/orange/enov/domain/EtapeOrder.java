@@ -25,7 +25,7 @@ public class EtapeOrder implements Serializable {
     @Column(name = "start")
     private Boolean start;
 
-    @JsonIgnoreProperties(value = { "etapeDefinitions" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "etapeDefinitions", "offre" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private ParcoursDefinition parcoursDefinition;

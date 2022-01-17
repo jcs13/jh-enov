@@ -3,7 +3,7 @@
   "fields": [
     {
       "fieldName": "id",
-      "fieldType": "String",
+      "fieldType": "Long",
       "fieldValidateRules": ["required"]
     },
     {
@@ -23,6 +23,16 @@
     },
     {
       "fieldName": "elementPath",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "etapeDefinitionId",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "blocDefinitionId",
       "fieldType": "String",
       "fieldValidateRules": ["required"]
     },

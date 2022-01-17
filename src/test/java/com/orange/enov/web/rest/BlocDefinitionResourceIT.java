@@ -9,7 +9,8 @@ import com.orange.enov.IntegrationTest;
 import com.orange.enov.domain.BlocDefinition;
 import com.orange.enov.repository.BlocDefinitionRepository;
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ class BlocDefinitionResourceIT {
 
     private static final String ENTITY_API_URL = "/api/bloc-definitions";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private BlocDefinitionRepository blocDefinitionRepository;
@@ -98,7 +102,7 @@ class BlocDefinitionResourceIT {
     @Transactional
     void createBlocDefinitionWithExistingId() throws Exception {
         // Create the BlocDefinition with an existing ID
-        blocDefinition.setId("existing_id");
+        blocDefinition.setId(1L);
 
         int databaseSizeBeforeCreate = blocDefinitionRepository.findAll().size();
 
@@ -156,7 +160,6 @@ class BlocDefinitionResourceIT {
     @Transactional
     void getAllBlocDefinitions() throws Exception {
         // Initialize the database
-        blocDefinition.setId(UUID.randomUUID().toString());
         blocDefinitionRepository.saveAndFlush(blocDefinition);
 
         // Get all the blocDefinitionList
@@ -164,7 +167,7 @@ class BlocDefinitionResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(blocDefinition.getId())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(blocDefinition.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL)));
     }
@@ -173,7 +176,6 @@ class BlocDefinitionResourceIT {
     @Transactional
     void getBlocDefinition() throws Exception {
         // Initialize the database
-        blocDefinition.setId(UUID.randomUUID().toString());
         blocDefinitionRepository.saveAndFlush(blocDefinition);
 
         // Get the blocDefinition
@@ -181,7 +183,7 @@ class BlocDefinitionResourceIT {
             .perform(get(ENTITY_API_URL_ID, blocDefinition.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(blocDefinition.getId()))
+            .andExpect(jsonPath("$.id").value(blocDefinition.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.label").value(DEFAULT_LABEL));
     }
@@ -197,7 +199,6 @@ class BlocDefinitionResourceIT {
     @Transactional
     void putNewBlocDefinition() throws Exception {
         // Initialize the database
-        blocDefinition.setId(UUID.randomUUID().toString());
         blocDefinitionRepository.saveAndFlush(blocDefinition);
 
         int databaseSizeBeforeUpdate = blocDefinitionRepository.findAll().size();
@@ -228,7 +229,7 @@ class BlocDefinitionResourceIT {
     @Transactional
     void putNonExistingBlocDefinition() throws Exception {
         int databaseSizeBeforeUpdate = blocDefinitionRepository.findAll().size();
-        blocDefinition.setId(UUID.randomUUID().toString());
+        blocDefinition.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBlocDefinitionMockMvc
@@ -248,12 +249,12 @@ class BlocDefinitionResourceIT {
     @Transactional
     void putWithIdMismatchBlocDefinition() throws Exception {
         int databaseSizeBeforeUpdate = blocDefinitionRepository.findAll().size();
-        blocDefinition.setId(UUID.randomUUID().toString());
+        blocDefinition.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBlocDefinitionMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(blocDefinition))
             )
@@ -268,7 +269,7 @@ class BlocDefinitionResourceIT {
     @Transactional
     void putWithMissingIdPathParamBlocDefinition() throws Exception {
         int databaseSizeBeforeUpdate = blocDefinitionRepository.findAll().size();
-        blocDefinition.setId(UUID.randomUUID().toString());
+        blocDefinition.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBlocDefinitionMockMvc
@@ -284,7 +285,6 @@ class BlocDefinitionResourceIT {
     @Transactional
     void partialUpdateBlocDefinitionWithPatch() throws Exception {
         // Initialize the database
-        blocDefinition.setId(UUID.randomUUID().toString());
         blocDefinitionRepository.saveAndFlush(blocDefinition);
 
         int databaseSizeBeforeUpdate = blocDefinitionRepository.findAll().size();
@@ -313,7 +313,6 @@ class BlocDefinitionResourceIT {
     @Transactional
     void fullUpdateBlocDefinitionWithPatch() throws Exception {
         // Initialize the database
-        blocDefinition.setId(UUID.randomUUID().toString());
         blocDefinitionRepository.saveAndFlush(blocDefinition);
 
         int databaseSizeBeforeUpdate = blocDefinitionRepository.findAll().size();
@@ -344,7 +343,7 @@ class BlocDefinitionResourceIT {
     @Transactional
     void patchNonExistingBlocDefinition() throws Exception {
         int databaseSizeBeforeUpdate = blocDefinitionRepository.findAll().size();
-        blocDefinition.setId(UUID.randomUUID().toString());
+        blocDefinition.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBlocDefinitionMockMvc
@@ -364,12 +363,12 @@ class BlocDefinitionResourceIT {
     @Transactional
     void patchWithIdMismatchBlocDefinition() throws Exception {
         int databaseSizeBeforeUpdate = blocDefinitionRepository.findAll().size();
-        blocDefinition.setId(UUID.randomUUID().toString());
+        blocDefinition.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBlocDefinitionMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(blocDefinition))
             )
@@ -384,7 +383,7 @@ class BlocDefinitionResourceIT {
     @Transactional
     void patchWithMissingIdPathParamBlocDefinition() throws Exception {
         int databaseSizeBeforeUpdate = blocDefinitionRepository.findAll().size();
-        blocDefinition.setId(UUID.randomUUID().toString());
+        blocDefinition.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBlocDefinitionMockMvc
@@ -402,7 +401,6 @@ class BlocDefinitionResourceIT {
     @Transactional
     void deleteBlocDefinition() throws Exception {
         // Initialize the database
-        blocDefinition.setId(UUID.randomUUID().toString());
         blocDefinitionRepository.saveAndFlush(blocDefinition);
 
         int databaseSizeBeforeDelete = blocDefinitionRepository.findAll().size();

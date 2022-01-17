@@ -9,7 +9,8 @@ import com.orange.enov.IntegrationTest;
 import com.orange.enov.domain.Element;
 import com.orange.enov.repository.ElementRepository;
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ class ElementResourceIT {
 
     private static final String ENTITY_API_URL = "/api/elements";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private ElementRepository elementRepository;
@@ -96,7 +100,7 @@ class ElementResourceIT {
     @Transactional
     void createElementWithExistingId() throws Exception {
         // Create the Element with an existing ID
-        element.setId("existing_id");
+        element.setId(1L);
 
         int databaseSizeBeforeCreate = elementRepository.findAll().size();
 
@@ -148,7 +152,6 @@ class ElementResourceIT {
     @Transactional
     void getAllElements() throws Exception {
         // Initialize the database
-        element.setId(UUID.randomUUID().toString());
         elementRepository.saveAndFlush(element);
 
         // Get all the elementList
@@ -156,7 +159,7 @@ class ElementResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(element.getId())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(element.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].path").value(hasItem(DEFAULT_PATH)));
     }
@@ -165,7 +168,6 @@ class ElementResourceIT {
     @Transactional
     void getElement() throws Exception {
         // Initialize the database
-        element.setId(UUID.randomUUID().toString());
         elementRepository.saveAndFlush(element);
 
         // Get the element
@@ -173,7 +175,7 @@ class ElementResourceIT {
             .perform(get(ENTITY_API_URL_ID, element.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(element.getId()))
+            .andExpect(jsonPath("$.id").value(element.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.path").value(DEFAULT_PATH));
     }
@@ -189,7 +191,6 @@ class ElementResourceIT {
     @Transactional
     void putNewElement() throws Exception {
         // Initialize the database
-        element.setId(UUID.randomUUID().toString());
         elementRepository.saveAndFlush(element);
 
         int databaseSizeBeforeUpdate = elementRepository.findAll().size();
@@ -220,7 +221,7 @@ class ElementResourceIT {
     @Transactional
     void putNonExistingElement() throws Exception {
         int databaseSizeBeforeUpdate = elementRepository.findAll().size();
-        element.setId(UUID.randomUUID().toString());
+        element.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restElementMockMvc
@@ -240,12 +241,12 @@ class ElementResourceIT {
     @Transactional
     void putWithIdMismatchElement() throws Exception {
         int databaseSizeBeforeUpdate = elementRepository.findAll().size();
-        element.setId(UUID.randomUUID().toString());
+        element.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restElementMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(element))
             )
@@ -260,7 +261,7 @@ class ElementResourceIT {
     @Transactional
     void putWithMissingIdPathParamElement() throws Exception {
         int databaseSizeBeforeUpdate = elementRepository.findAll().size();
-        element.setId(UUID.randomUUID().toString());
+        element.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restElementMockMvc
@@ -276,7 +277,6 @@ class ElementResourceIT {
     @Transactional
     void partialUpdateElementWithPatch() throws Exception {
         // Initialize the database
-        element.setId(UUID.randomUUID().toString());
         elementRepository.saveAndFlush(element);
 
         int databaseSizeBeforeUpdate = elementRepository.findAll().size();
@@ -307,7 +307,6 @@ class ElementResourceIT {
     @Transactional
     void fullUpdateElementWithPatch() throws Exception {
         // Initialize the database
-        element.setId(UUID.randomUUID().toString());
         elementRepository.saveAndFlush(element);
 
         int databaseSizeBeforeUpdate = elementRepository.findAll().size();
@@ -338,7 +337,7 @@ class ElementResourceIT {
     @Transactional
     void patchNonExistingElement() throws Exception {
         int databaseSizeBeforeUpdate = elementRepository.findAll().size();
-        element.setId(UUID.randomUUID().toString());
+        element.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restElementMockMvc
@@ -358,12 +357,12 @@ class ElementResourceIT {
     @Transactional
     void patchWithIdMismatchElement() throws Exception {
         int databaseSizeBeforeUpdate = elementRepository.findAll().size();
-        element.setId(UUID.randomUUID().toString());
+        element.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restElementMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(element))
             )
@@ -378,7 +377,7 @@ class ElementResourceIT {
     @Transactional
     void patchWithMissingIdPathParamElement() throws Exception {
         int databaseSizeBeforeUpdate = elementRepository.findAll().size();
-        element.setId(UUID.randomUUID().toString());
+        element.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restElementMockMvc
@@ -394,7 +393,6 @@ class ElementResourceIT {
     @Transactional
     void deleteElement() throws Exception {
         // Initialize the database
-        element.setId(UUID.randomUUID().toString());
         elementRepository.saveAndFlush(element);
 
         int databaseSizeBeforeDelete = elementRepository.findAll().size();

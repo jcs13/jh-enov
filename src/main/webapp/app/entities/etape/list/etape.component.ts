@@ -34,7 +34,7 @@ export class EtapeComponent implements OnInit {
     this.loadAll();
   }
 
-  trackId(index: number, item: IEtape): string {
+  trackId(index: number, item: IEtape): number {
     return item.id!;
   }
 

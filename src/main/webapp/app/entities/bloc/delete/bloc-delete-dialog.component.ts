@@ -16,7 +16,7 @@ export class BlocDeleteDialogComponent {
     this.activeModal.dismiss();
   }
 
-  confirmDelete(id: string): void {
+  confirmDelete(id: number): void {
     this.blocService.delete(id).subscribe(() => {
       this.activeModal.close('deleted');
     });

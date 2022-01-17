@@ -21,8 +21,10 @@ public class ParcoursDefinition implements Serializable {
 
     @NotNull
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id", nullable = false)
-    private String id;
+    private Long id;
 
     @NotNull
     @Column(name = "name", nullable = false)
@@ -37,18 +39,22 @@ public class ParcoursDefinition implements Serializable {
     @JsonIgnoreProperties(value = { "blocDefinitions", "parcoursDefinition" }, allowSetters = true)
     private Set<EtapeDefinition> etapeDefinitions = new HashSet<>();
 
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "parcoursDefinitions", "businessUnit" }, allowSetters = true)
+    private Offre offre;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public String getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public ParcoursDefinition id(String id) {
+    public ParcoursDefinition id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -106,6 +112,19 @@ public class ParcoursDefinition implements Serializable {
     public ParcoursDefinition removeEtapeDefinition(EtapeDefinition etapeDefinition) {
         this.etapeDefinitions.remove(etapeDefinition);
         etapeDefinition.setParcoursDefinition(null);
+        return this;
+    }
+
+    public Offre getOffre() {
+        return this.offre;
+    }
+
+    public void setOffre(Offre offre) {
+        this.offre = offre;
+    }
+
+    public ParcoursDefinition offre(Offre offre) {
+        this.setOffre(offre);
         return this;
     }
 

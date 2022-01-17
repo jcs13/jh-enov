@@ -28,7 +28,7 @@ describe('Element Management Component', () => {
     jest.spyOn(service, 'query').mockReturnValue(
       of(
         new HttpResponse({
-          body: [{ id: 'ABC' }],
+          body: [{ id: 123 }],
           headers,
         })
       )
@@ -41,6 +41,6 @@ describe('Element Management Component', () => {
 
     // THEN
     expect(service.query).toHaveBeenCalled();
-    expect(comp.elements?.[0]).toEqual(expect.objectContaining({ id: 'ABC' }));
+    expect(comp.elements?.[0]).toEqual(expect.objectContaining({ id: 123 }));
   });
 });

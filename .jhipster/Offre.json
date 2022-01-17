@@ -3,7 +3,7 @@
   "fields": [
     {
       "fieldName": "id",
-      "fieldType": "String",
+      "fieldType": "Long",
       "fieldValidateRules": ["required"]
     },
     {
@@ -17,7 +17,20 @@
       "fieldValidateRules": ["required"]
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "parcoursDefinition",
+      "otherEntityRelationshipName": "offre",
+      "relationshipName": "parcoursDefinition"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "businessUnit",
+      "otherEntityRelationshipName": "offre",
+      "relationshipName": "businessUnit"
+    }
+  ],
   "entityTableName": "offre",
   "dto": "no",
   "pagination": "no",

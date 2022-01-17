@@ -9,7 +9,8 @@ import com.orange.enov.IntegrationTest;
 import com.orange.enov.domain.Offre;
 import com.orange.enov.repository.OffreRepository;
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ class OffreResourceIT {
 
     private static final String ENTITY_API_URL = "/api/offres";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private OffreRepository offreRepository;
@@ -96,7 +100,7 @@ class OffreResourceIT {
     @Transactional
     void createOffreWithExistingId() throws Exception {
         // Create the Offre with an existing ID
-        offre.setId("existing_id");
+        offre.setId(1L);
 
         int databaseSizeBeforeCreate = offreRepository.findAll().size();
 
@@ -148,7 +152,6 @@ class OffreResourceIT {
     @Transactional
     void getAllOffres() throws Exception {
         // Initialize the database
-        offre.setId(UUID.randomUUID().toString());
         offreRepository.saveAndFlush(offre);
 
         // Get all the offreList
@@ -156,7 +159,7 @@ class OffreResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(offre.getId())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(offre.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL)));
     }
@@ -165,7 +168,6 @@ class OffreResourceIT {
     @Transactional
     void getOffre() throws Exception {
         // Initialize the database
-        offre.setId(UUID.randomUUID().toString());
         offreRepository.saveAndFlush(offre);
 
         // Get the offre
@@ -173,7 +175,7 @@ class OffreResourceIT {
             .perform(get(ENTITY_API_URL_ID, offre.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(offre.getId()))
+            .andExpect(jsonPath("$.id").value(offre.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.label").value(DEFAULT_LABEL));
     }
@@ -189,7 +191,6 @@ class OffreResourceIT {
     @Transactional
     void putNewOffre() throws Exception {
         // Initialize the database
-        offre.setId(UUID.randomUUID().toString());
         offreRepository.saveAndFlush(offre);
 
         int databaseSizeBeforeUpdate = offreRepository.findAll().size();
@@ -220,7 +221,7 @@ class OffreResourceIT {
     @Transactional
     void putNonExistingOffre() throws Exception {
         int databaseSizeBeforeUpdate = offreRepository.findAll().size();
-        offre.setId(UUID.randomUUID().toString());
+        offre.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restOffreMockMvc
@@ -240,12 +241,12 @@ class OffreResourceIT {
     @Transactional
     void putWithIdMismatchOffre() throws Exception {
         int databaseSizeBeforeUpdate = offreRepository.findAll().size();
-        offre.setId(UUID.randomUUID().toString());
+        offre.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOffreMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(offre))
             )
@@ -260,7 +261,7 @@ class OffreResourceIT {
     @Transactional
     void putWithMissingIdPathParamOffre() throws Exception {
         int databaseSizeBeforeUpdate = offreRepository.findAll().size();
-        offre.setId(UUID.randomUUID().toString());
+        offre.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOffreMockMvc
@@ -276,7 +277,6 @@ class OffreResourceIT {
     @Transactional
     void partialUpdateOffreWithPatch() throws Exception {
         // Initialize the database
-        offre.setId(UUID.randomUUID().toString());
         offreRepository.saveAndFlush(offre);
 
         int databaseSizeBeforeUpdate = offreRepository.findAll().size();
@@ -305,7 +305,6 @@ class OffreResourceIT {
     @Transactional
     void fullUpdateOffreWithPatch() throws Exception {
         // Initialize the database
-        offre.setId(UUID.randomUUID().toString());
         offreRepository.saveAndFlush(offre);
 
         int databaseSizeBeforeUpdate = offreRepository.findAll().size();
@@ -336,7 +335,7 @@ class OffreResourceIT {
     @Transactional
     void patchNonExistingOffre() throws Exception {
         int databaseSizeBeforeUpdate = offreRepository.findAll().size();
-        offre.setId(UUID.randomUUID().toString());
+        offre.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restOffreMockMvc
@@ -356,12 +355,12 @@ class OffreResourceIT {
     @Transactional
     void patchWithIdMismatchOffre() throws Exception {
         int databaseSizeBeforeUpdate = offreRepository.findAll().size();
-        offre.setId(UUID.randomUUID().toString());
+        offre.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOffreMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(offre))
             )
@@ -376,7 +375,7 @@ class OffreResourceIT {
     @Transactional
     void patchWithMissingIdPathParamOffre() throws Exception {
         int databaseSizeBeforeUpdate = offreRepository.findAll().size();
-        offre.setId(UUID.randomUUID().toString());
+        offre.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOffreMockMvc
@@ -392,7 +391,6 @@ class OffreResourceIT {
     @Transactional
     void deleteOffre() throws Exception {
         // Initialize the database
-        offre.setId(UUID.randomUUID().toString());
         offreRepository.saveAndFlush(offre);
 
         int databaseSizeBeforeDelete = offreRepository.findAll().size();

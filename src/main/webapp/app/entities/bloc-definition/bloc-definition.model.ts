@@ -2,7 +2,7 @@ import { IElement } from 'app/entities/element/element.model';
 import { IEtapeDefinition } from 'app/entities/etape-definition/etape-definition.model';
 
 export interface IBlocDefinition {
-  id?: string;
+  id?: number;
   name?: string;
   label?: string;
   element?: IElement | null;
@@ -11,7 +11,7 @@ export interface IBlocDefinition {
 
 export class BlocDefinition implements IBlocDefinition {
   constructor(
-    public id?: string,
+    public id?: number,
     public name?: string,
     public label?: string,
     public element?: IElement | null,
@@ -19,6 +19,6 @@ export class BlocDefinition implements IBlocDefinition {
   ) {}
 }
 
-export function getBlocDefinitionIdentifier(blocDefinition: IBlocDefinition): string | undefined {
+export function getBlocDefinitionIdentifier(blocDefinition: IBlocDefinition): number | undefined {
   return blocDefinition.id;
 }

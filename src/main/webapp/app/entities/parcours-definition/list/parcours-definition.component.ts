@@ -34,7 +34,7 @@ export class ParcoursDefinitionComponent implements OnInit {
     this.loadAll();
   }
 
-  trackId(index: number, item: IParcoursDefinition): string {
+  trackId(index: number, item: IParcoursDefinition): number {
     return item.id!;
   }
 

@@ -25,6 +25,8 @@ export class BlocUpdateComponent implements OnInit {
     label: [null, [Validators.required]],
     elementName: [null, [Validators.required]],
     elementPath: [null, [Validators.required]],
+    etapeDefinitionId: [null, [Validators.required]],
+    blocDefinitionId: [null, [Validators.required]],
     display: [null, [Validators.required]],
     etape: [],
   });
@@ -58,7 +60,7 @@ export class BlocUpdateComponent implements OnInit {
     }
   }
 
-  trackEtapeById(index: number, item: IEtape): string {
+  trackEtapeById(index: number, item: IEtape): number {
     return item.id!;
   }
 
@@ -88,6 +90,8 @@ export class BlocUpdateComponent implements OnInit {
       label: bloc.label,
       elementName: bloc.elementName,
       elementPath: bloc.elementPath,
+      etapeDefinitionId: bloc.etapeDefinitionId,
+      blocDefinitionId: bloc.blocDefinitionId,
       display: bloc.display,
       etape: bloc.etape,
     });
@@ -111,6 +115,8 @@ export class BlocUpdateComponent implements OnInit {
       label: this.editForm.get(['label'])!.value,
       elementName: this.editForm.get(['elementName'])!.value,
       elementPath: this.editForm.get(['elementPath'])!.value,
+      etapeDefinitionId: this.editForm.get(['etapeDefinitionId'])!.value,
+      blocDefinitionId: this.editForm.get(['blocDefinitionId'])!.value,
       display: this.editForm.get(['display'])!.value,
       etape: this.editForm.get(['etape'])!.value,
     };

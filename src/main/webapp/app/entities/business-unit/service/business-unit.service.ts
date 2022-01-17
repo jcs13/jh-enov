@@ -21,18 +21,18 @@ export class BusinessUnitService {
   }
 
   update(businessUnit: IBusinessUnit): Observable<EntityResponseType> {
-    return this.http.put<IBusinessUnit>(`${this.resourceUrl}/${getBusinessUnitIdentifier(businessUnit) as string}`, businessUnit, {
+    return this.http.put<IBusinessUnit>(`${this.resourceUrl}/${getBusinessUnitIdentifier(businessUnit) as number}`, businessUnit, {
       observe: 'response',
     });
   }
 
   partialUpdate(businessUnit: IBusinessUnit): Observable<EntityResponseType> {
-    return this.http.patch<IBusinessUnit>(`${this.resourceUrl}/${getBusinessUnitIdentifier(businessUnit) as string}`, businessUnit, {
+    return this.http.patch<IBusinessUnit>(`${this.resourceUrl}/${getBusinessUnitIdentifier(businessUnit) as number}`, businessUnit, {
       observe: 'response',
     });
   }
 
-  find(id: string): Observable<EntityResponseType> {
+  find(id: number): Observable<EntityResponseType> {
     return this.http.get<IBusinessUnit>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
@@ -41,7 +41,7 @@ export class BusinessUnitService {
     return this.http.get<IBusinessUnit[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
-  delete(id: string): Observable<HttpResponse<{}>> {
+  delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 

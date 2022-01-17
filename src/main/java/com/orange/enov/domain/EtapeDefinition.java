@@ -21,8 +21,10 @@ public class EtapeDefinition implements Serializable {
 
     @NotNull
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id", nullable = false)
-    private String id;
+    private Long id;
 
     @NotNull
     @Column(name = "name", nullable = false)
@@ -38,21 +40,21 @@ public class EtapeDefinition implements Serializable {
     private Set<BlocDefinition> blocDefinitions = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "etapeDefinitions" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "etapeDefinitions", "offre" }, allowSetters = true)
     private ParcoursDefinition parcoursDefinition;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public String getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public EtapeDefinition id(String id) {
+    public EtapeDefinition id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

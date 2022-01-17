@@ -58,7 +58,7 @@ public class ElementResource {
         Element result = elementRepository.save(element);
         return ResponseEntity
             .created(new URI("/api/elements/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -74,7 +74,7 @@ public class ElementResource {
      */
     @PutMapping("/elements/{id}")
     public ResponseEntity<Element> updateElement(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody Element element
     ) throws URISyntaxException {
         log.debug("REST request to update Element : {}, {}", id, element);
@@ -92,7 +92,7 @@ public class ElementResource {
         Element result = elementRepository.save(element);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, element.getId()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, element.getId().toString()))
             .body(result);
     }
 
@@ -109,7 +109,7 @@ public class ElementResource {
      */
     @PatchMapping(value = "/elements/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<Element> partialUpdateElement(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Element element
     ) throws URISyntaxException {
         log.debug("REST request to partial update Element partially : {}, {}", id, element);
@@ -140,7 +140,7 @@ public class ElementResource {
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, element.getId())
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, element.getId().toString())
         );
     }
 
@@ -170,7 +170,7 @@ public class ElementResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the element, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/elements/{id}")
-    public ResponseEntity<Element> getElement(@PathVariable String id) {
+    public ResponseEntity<Element> getElement(@PathVariable Long id) {
         log.debug("REST request to get Element : {}", id);
         Optional<Element> element = elementRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(element);
@@ -183,9 +183,12 @@ public class ElementResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/elements/{id}")
-    public ResponseEntity<Void> deleteElement(@PathVariable String id) {
+    public ResponseEntity<Void> deleteElement(@PathVariable Long id) {
         log.debug("REST request to delete Element : {}", id);
         elementRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

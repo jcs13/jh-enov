@@ -56,7 +56,7 @@ public class BlocResource {
         Bloc result = blocRepository.save(bloc);
         return ResponseEntity
             .created(new URI("/api/blocs/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -71,7 +71,7 @@ public class BlocResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/blocs/{id}")
-    public ResponseEntity<Bloc> updateBloc(@PathVariable(value = "id", required = false) final String id, @Valid @RequestBody Bloc bloc)
+    public ResponseEntity<Bloc> updateBloc(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody Bloc bloc)
         throws URISyntaxException {
         log.debug("REST request to update Bloc : {}, {}", id, bloc);
         if (bloc.getId() == null) {
@@ -88,7 +88,7 @@ public class BlocResource {
         Bloc result = blocRepository.save(bloc);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, bloc.getId()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, bloc.getId().toString()))
             .body(result);
     }
 
@@ -105,7 +105,7 @@ public class BlocResource {
      */
     @PatchMapping(value = "/blocs/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<Bloc> partialUpdateBloc(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Bloc bloc
     ) throws URISyntaxException {
         log.debug("REST request to partial update Bloc partially : {}, {}", id, bloc);
@@ -135,6 +135,12 @@ public class BlocResource {
                 if (bloc.getElementPath() != null) {
                     existingBloc.setElementPath(bloc.getElementPath());
                 }
+                if (bloc.getEtapeDefinitionId() != null) {
+                    existingBloc.setEtapeDefinitionId(bloc.getEtapeDefinitionId());
+                }
+                if (bloc.getBlocDefinitionId() != null) {
+                    existingBloc.setBlocDefinitionId(bloc.getBlocDefinitionId());
+                }
                 if (bloc.getDisplay() != null) {
                     existingBloc.setDisplay(bloc.getDisplay());
                 }
@@ -143,7 +149,10 @@ public class BlocResource {
             })
             .map(blocRepository::save);
 
-        return ResponseUtil.wrapOrNotFound(result, HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, bloc.getId()));
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, bloc.getId().toString())
+        );
     }
 
     /**
@@ -164,7 +173,7 @@ public class BlocResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bloc, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/blocs/{id}")
-    public ResponseEntity<Bloc> getBloc(@PathVariable String id) {
+    public ResponseEntity<Bloc> getBloc(@PathVariable Long id) {
         log.debug("REST request to get Bloc : {}", id);
         Optional<Bloc> bloc = blocRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(bloc);
@@ -177,9 +186,12 @@ public class BlocResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/blocs/{id}")
-    public ResponseEntity<Void> deleteBloc(@PathVariable String id) {
+    public ResponseEntity<Void> deleteBloc(@PathVariable Long id) {
         log.debug("REST request to delete Bloc : {}", id);
         blocRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

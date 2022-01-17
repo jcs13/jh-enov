@@ -28,7 +28,7 @@ describe('Offre Management Component', () => {
     jest.spyOn(service, 'query').mockReturnValue(
       of(
         new HttpResponse({
-          body: [{ id: 'ABC' }],
+          body: [{ id: 123 }],
           headers,
         })
       )
@@ -41,6 +41,6 @@ describe('Offre Management Component', () => {
 
     // THEN
     expect(service.query).toHaveBeenCalled();
-    expect(comp.offres?.[0]).toEqual(expect.objectContaining({ id: 'ABC' }));
+    expect(comp.offres?.[0]).toEqual(expect.objectContaining({ id: 123 }));
   });
 });

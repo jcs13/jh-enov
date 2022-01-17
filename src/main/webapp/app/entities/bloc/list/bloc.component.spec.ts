@@ -28,7 +28,7 @@ describe('Bloc Management Component', () => {
     jest.spyOn(service, 'query').mockReturnValue(
       of(
         new HttpResponse({
-          body: [{ id: 'ABC' }],
+          body: [{ id: 123 }],
           headers,
         })
       )
@@ -41,6 +41,6 @@ describe('Bloc Management Component', () => {
 
     // THEN
     expect(service.query).toHaveBeenCalled();
-    expect(comp.blocs?.[0]).toEqual(expect.objectContaining({ id: 'ABC' }));
+    expect(comp.blocs?.[0]).toEqual(expect.objectContaining({ id: 123 }));
   });
 });

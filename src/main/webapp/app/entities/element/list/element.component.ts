@@ -34,7 +34,7 @@ export class ElementComponent implements OnInit {
     this.loadAll();
   }
 
-  trackId(index: number, item: IElement): string {
+  trackId(index: number, item: IElement): number {
     return item.id!;
   }
 

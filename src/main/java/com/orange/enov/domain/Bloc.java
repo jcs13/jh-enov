@@ -19,8 +19,10 @@ public class Bloc implements Serializable {
 
     @NotNull
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id", nullable = false)
-    private String id;
+    private Long id;
 
     @NotNull
     @Column(name = "name", nullable = false)
@@ -39,6 +41,14 @@ public class Bloc implements Serializable {
     private String elementPath;
 
     @NotNull
+    @Column(name = "etape_definition_id", nullable = false)
+    private String etapeDefinitionId;
+
+    @NotNull
+    @Column(name = "bloc_definition_id", nullable = false)
+    private String blocDefinitionId;
+
+    @NotNull
     @Column(name = "display", nullable = false)
     private Boolean display;
 
@@ -48,16 +58,16 @@ public class Bloc implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public String getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public Bloc id(String id) {
+    public Bloc id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -111,6 +121,32 @@ public class Bloc implements Serializable {
 
     public void setElementPath(String elementPath) {
         this.elementPath = elementPath;
+    }
+
+    public String getEtapeDefinitionId() {
+        return this.etapeDefinitionId;
+    }
+
+    public Bloc etapeDefinitionId(String etapeDefinitionId) {
+        this.setEtapeDefinitionId(etapeDefinitionId);
+        return this;
+    }
+
+    public void setEtapeDefinitionId(String etapeDefinitionId) {
+        this.etapeDefinitionId = etapeDefinitionId;
+    }
+
+    public String getBlocDefinitionId() {
+        return this.blocDefinitionId;
+    }
+
+    public Bloc blocDefinitionId(String blocDefinitionId) {
+        this.setBlocDefinitionId(blocDefinitionId);
+        return this;
+    }
+
+    public void setBlocDefinitionId(String blocDefinitionId) {
+        this.blocDefinitionId = blocDefinitionId;
     }
 
     public Boolean getDisplay() {
@@ -167,6 +203,8 @@ public class Bloc implements Serializable {
             ", label='" + getLabel() + "'" +
             ", elementName='" + getElementName() + "'" +
             ", elementPath='" + getElementPath() + "'" +
+            ", etapeDefinitionId='" + getEtapeDefinitionId() + "'" +
+            ", blocDefinitionId='" + getBlocDefinitionId() + "'" +
             ", display='" + getDisplay() + "'" +
             "}";
     }

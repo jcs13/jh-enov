@@ -9,7 +9,8 @@ import com.orange.enov.IntegrationTest;
 import com.orange.enov.domain.EtapeDefinition;
 import com.orange.enov.repository.EtapeDefinitionRepository;
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ class EtapeDefinitionResourceIT {
 
     private static final String ENTITY_API_URL = "/api/etape-definitions";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private EtapeDefinitionRepository etapeDefinitionRepository;
@@ -98,7 +102,7 @@ class EtapeDefinitionResourceIT {
     @Transactional
     void createEtapeDefinitionWithExistingId() throws Exception {
         // Create the EtapeDefinition with an existing ID
-        etapeDefinition.setId("existing_id");
+        etapeDefinition.setId(1L);
 
         int databaseSizeBeforeCreate = etapeDefinitionRepository.findAll().size();
 
@@ -156,7 +160,6 @@ class EtapeDefinitionResourceIT {
     @Transactional
     void getAllEtapeDefinitions() throws Exception {
         // Initialize the database
-        etapeDefinition.setId(UUID.randomUUID().toString());
         etapeDefinitionRepository.saveAndFlush(etapeDefinition);
 
         // Get all the etapeDefinitionList
@@ -164,7 +167,7 @@ class EtapeDefinitionResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(etapeDefinition.getId())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(etapeDefinition.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL)));
     }
@@ -173,7 +176,6 @@ class EtapeDefinitionResourceIT {
     @Transactional
     void getEtapeDefinition() throws Exception {
         // Initialize the database
-        etapeDefinition.setId(UUID.randomUUID().toString());
         etapeDefinitionRepository.saveAndFlush(etapeDefinition);
 
         // Get the etapeDefinition
@@ -181,7 +183,7 @@ class EtapeDefinitionResourceIT {
             .perform(get(ENTITY_API_URL_ID, etapeDefinition.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(etapeDefinition.getId()))
+            .andExpect(jsonPath("$.id").value(etapeDefinition.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.label").value(DEFAULT_LABEL));
     }
@@ -197,7 +199,6 @@ class EtapeDefinitionResourceIT {
     @Transactional
     void putNewEtapeDefinition() throws Exception {
         // Initialize the database
-        etapeDefinition.setId(UUID.randomUUID().toString());
         etapeDefinitionRepository.saveAndFlush(etapeDefinition);
 
         int databaseSizeBeforeUpdate = etapeDefinitionRepository.findAll().size();
@@ -228,7 +229,7 @@ class EtapeDefinitionResourceIT {
     @Transactional
     void putNonExistingEtapeDefinition() throws Exception {
         int databaseSizeBeforeUpdate = etapeDefinitionRepository.findAll().size();
-        etapeDefinition.setId(UUID.randomUUID().toString());
+        etapeDefinition.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restEtapeDefinitionMockMvc
@@ -248,12 +249,12 @@ class EtapeDefinitionResourceIT {
     @Transactional
     void putWithIdMismatchEtapeDefinition() throws Exception {
         int databaseSizeBeforeUpdate = etapeDefinitionRepository.findAll().size();
-        etapeDefinition.setId(UUID.randomUUID().toString());
+        etapeDefinition.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restEtapeDefinitionMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(etapeDefinition))
             )
@@ -268,7 +269,7 @@ class EtapeDefinitionResourceIT {
     @Transactional
     void putWithMissingIdPathParamEtapeDefinition() throws Exception {
         int databaseSizeBeforeUpdate = etapeDefinitionRepository.findAll().size();
-        etapeDefinition.setId(UUID.randomUUID().toString());
+        etapeDefinition.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restEtapeDefinitionMockMvc
@@ -286,7 +287,6 @@ class EtapeDefinitionResourceIT {
     @Transactional
     void partialUpdateEtapeDefinitionWithPatch() throws Exception {
         // Initialize the database
-        etapeDefinition.setId(UUID.randomUUID().toString());
         etapeDefinitionRepository.saveAndFlush(etapeDefinition);
 
         int databaseSizeBeforeUpdate = etapeDefinitionRepository.findAll().size();
@@ -315,7 +315,6 @@ class EtapeDefinitionResourceIT {
     @Transactional
     void fullUpdateEtapeDefinitionWithPatch() throws Exception {
         // Initialize the database
-        etapeDefinition.setId(UUID.randomUUID().toString());
         etapeDefinitionRepository.saveAndFlush(etapeDefinition);
 
         int databaseSizeBeforeUpdate = etapeDefinitionRepository.findAll().size();
@@ -346,7 +345,7 @@ class EtapeDefinitionResourceIT {
     @Transactional
     void patchNonExistingEtapeDefinition() throws Exception {
         int databaseSizeBeforeUpdate = etapeDefinitionRepository.findAll().size();
-        etapeDefinition.setId(UUID.randomUUID().toString());
+        etapeDefinition.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restEtapeDefinitionMockMvc
@@ -366,12 +365,12 @@ class EtapeDefinitionResourceIT {
     @Transactional
     void patchWithIdMismatchEtapeDefinition() throws Exception {
         int databaseSizeBeforeUpdate = etapeDefinitionRepository.findAll().size();
-        etapeDefinition.setId(UUID.randomUUID().toString());
+        etapeDefinition.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restEtapeDefinitionMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(etapeDefinition))
             )
@@ -386,7 +385,7 @@ class EtapeDefinitionResourceIT {
     @Transactional
     void patchWithMissingIdPathParamEtapeDefinition() throws Exception {
         int databaseSizeBeforeUpdate = etapeDefinitionRepository.findAll().size();
-        etapeDefinition.setId(UUID.randomUUID().toString());
+        etapeDefinition.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restEtapeDefinitionMockMvc
@@ -406,7 +405,6 @@ class EtapeDefinitionResourceIT {
     @Transactional
     void deleteEtapeDefinition() throws Exception {
         // Initialize the database
-        etapeDefinition.setId(UUID.randomUUID().toString());
         etapeDefinitionRepository.saveAndFlush(etapeDefinition);
 
         int databaseSizeBeforeDelete = etapeDefinitionRepository.findAll().size();

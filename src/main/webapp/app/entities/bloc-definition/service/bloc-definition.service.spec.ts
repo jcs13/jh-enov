@@ -20,7 +20,7 @@ describe('BlocDefinition Service', () => {
     httpMock = TestBed.inject(HttpTestingController);
 
     elemDefault = {
-      id: 'AAAAAAA',
+      id: 0,
       name: 'AAAAAAA',
       label: 'AAAAAAA',
     };
@@ -30,7 +30,7 @@ describe('BlocDefinition Service', () => {
     it('should find an element', () => {
       const returnedFromService = Object.assign({}, elemDefault);
 
-      service.find('ABC').subscribe(resp => (expectedResult = resp.body));
+      service.find(123).subscribe(resp => (expectedResult = resp.body));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -40,7 +40,7 @@ describe('BlocDefinition Service', () => {
     it('should create a BlocDefinition', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'ID',
+          id: 0,
         },
         elemDefault
       );
@@ -57,7 +57,7 @@ describe('BlocDefinition Service', () => {
     it('should update a BlocDefinition', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'BBBBBB',
+          id: 1,
           name: 'BBBBBB',
           label: 'BBBBBB',
         },
@@ -96,7 +96,7 @@ describe('BlocDefinition Service', () => {
     it('should return a list of BlocDefinition', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'BBBBBB',
+          id: 1,
           name: 'BBBBBB',
           label: 'BBBBBB',
         },
@@ -114,7 +114,7 @@ describe('BlocDefinition Service', () => {
     });
 
     it('should delete a BlocDefinition', () => {
-      service.delete('ABC').subscribe(resp => (expectedResult = resp.ok));
+      service.delete(123).subscribe(resp => (expectedResult = resp.ok));
 
       const req = httpMock.expectOne({ method: 'DELETE' });
       req.flush({ status: 200 });
@@ -123,42 +123,42 @@ describe('BlocDefinition Service', () => {
 
     describe('addBlocDefinitionToCollectionIfMissing', () => {
       it('should add a BlocDefinition to an empty array', () => {
-        const blocDefinition: IBlocDefinition = { id: 'ABC' };
+        const blocDefinition: IBlocDefinition = { id: 123 };
         expectedResult = service.addBlocDefinitionToCollectionIfMissing([], blocDefinition);
         expect(expectedResult).toHaveLength(1);
         expect(expectedResult).toContain(blocDefinition);
       });
 
       it('should not add a BlocDefinition to an array that contains it', () => {
-        const blocDefinition: IBlocDefinition = { id: 'ABC' };
+        const blocDefinition: IBlocDefinition = { id: 123 };
         const blocDefinitionCollection: IBlocDefinition[] = [
           {
             ...blocDefinition,
           },
-          { id: 'CBA' },
+          { id: 456 },
         ];
         expectedResult = service.addBlocDefinitionToCollectionIfMissing(blocDefinitionCollection, blocDefinition);
         expect(expectedResult).toHaveLength(2);
       });
 
       it("should add a BlocDefinition to an array that doesn't contain it", () => {
-        const blocDefinition: IBlocDefinition = { id: 'ABC' };
-        const blocDefinitionCollection: IBlocDefinition[] = [{ id: 'CBA' }];
+        const blocDefinition: IBlocDefinition = { id: 123 };
+        const blocDefinitionCollection: IBlocDefinition[] = [{ id: 456 }];
         expectedResult = service.addBlocDefinitionToCollectionIfMissing(blocDefinitionCollection, blocDefinition);
         expect(expectedResult).toHaveLength(2);
         expect(expectedResult).toContain(blocDefinition);
       });
 
       it('should add only unique BlocDefinition to an array', () => {
-        const blocDefinitionArray: IBlocDefinition[] = [{ id: 'ABC' }, { id: 'CBA' }, { id: '5a2a3a14-5149-4b7a-998e-fa2c8d299ad5' }];
-        const blocDefinitionCollection: IBlocDefinition[] = [{ id: 'ABC' }];
+        const blocDefinitionArray: IBlocDefinition[] = [{ id: 123 }, { id: 456 }, { id: 31495 }];
+        const blocDefinitionCollection: IBlocDefinition[] = [{ id: 123 }];
         expectedResult = service.addBlocDefinitionToCollectionIfMissing(blocDefinitionCollection, ...blocDefinitionArray);
         expect(expectedResult).toHaveLength(3);
       });
 
       it('should accept varargs', () => {
-        const blocDefinition: IBlocDefinition = { id: 'ABC' };
-        const blocDefinition2: IBlocDefinition = { id: 'CBA' };
+        const blocDefinition: IBlocDefinition = { id: 123 };
+        const blocDefinition2: IBlocDefinition = { id: 456 };
         expectedResult = service.addBlocDefinitionToCollectionIfMissing([], blocDefinition, blocDefinition2);
         expect(expectedResult).toHaveLength(2);
         expect(expectedResult).toContain(blocDefinition);
@@ -166,14 +166,14 @@ describe('BlocDefinition Service', () => {
       });
 
       it('should accept null and undefined values', () => {
-        const blocDefinition: IBlocDefinition = { id: 'ABC' };
+        const blocDefinition: IBlocDefinition = { id: 123 };
         expectedResult = service.addBlocDefinitionToCollectionIfMissing([], null, blocDefinition, undefined);
         expect(expectedResult).toHaveLength(1);
         expect(expectedResult).toContain(blocDefinition);
       });
 
       it('should return initial array if no BlocDefinition is added', () => {
-        const blocDefinitionCollection: IBlocDefinition[] = [{ id: 'ABC' }];
+        const blocDefinitionCollection: IBlocDefinition[] = [{ id: 123 }];
         expectedResult = service.addBlocDefinitionToCollectionIfMissing(blocDefinitionCollection, undefined, null);
         expect(expectedResult).toEqual(blocDefinitionCollection);
       });

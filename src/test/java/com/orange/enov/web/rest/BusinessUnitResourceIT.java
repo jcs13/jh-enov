@@ -9,7 +9,8 @@ import com.orange.enov.IntegrationTest;
 import com.orange.enov.domain.BusinessUnit;
 import com.orange.enov.repository.BusinessUnitRepository;
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,9 @@ class BusinessUnitResourceIT {
 
     private static final String ENTITY_API_URL = "/api/business-units";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private BusinessUnitRepository businessUnitRepository;
@@ -100,7 +104,7 @@ class BusinessUnitResourceIT {
     @Transactional
     void createBusinessUnitWithExistingId() throws Exception {
         // Create the BusinessUnit with an existing ID
-        businessUnit.setId("existing_id");
+        businessUnit.setId(1L);
 
         int databaseSizeBeforeCreate = businessUnitRepository.findAll().size();
 
@@ -169,7 +173,6 @@ class BusinessUnitResourceIT {
     @Transactional
     void getAllBusinessUnits() throws Exception {
         // Initialize the database
-        businessUnit.setId(UUID.randomUUID().toString());
         businessUnitRepository.saveAndFlush(businessUnit);
 
         // Get all the businessUnitList
@@ -177,7 +180,7 @@ class BusinessUnitResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(businessUnit.getId())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(businessUnit.getId().intValue())))
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL)));
@@ -187,7 +190,6 @@ class BusinessUnitResourceIT {
     @Transactional
     void getBusinessUnit() throws Exception {
         // Initialize the database
-        businessUnit.setId(UUID.randomUUID().toString());
         businessUnitRepository.saveAndFlush(businessUnit);
 
         // Get the businessUnit
@@ -195,7 +197,7 @@ class BusinessUnitResourceIT {
             .perform(get(ENTITY_API_URL_ID, businessUnit.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(businessUnit.getId()))
+            .andExpect(jsonPath("$.id").value(businessUnit.getId().intValue()))
             .andExpect(jsonPath("$.code").value(DEFAULT_CODE))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.label").value(DEFAULT_LABEL));
@@ -212,7 +214,6 @@ class BusinessUnitResourceIT {
     @Transactional
     void putNewBusinessUnit() throws Exception {
         // Initialize the database
-        businessUnit.setId(UUID.randomUUID().toString());
         businessUnitRepository.saveAndFlush(businessUnit);
 
         int databaseSizeBeforeUpdate = businessUnitRepository.findAll().size();
@@ -244,7 +245,7 @@ class BusinessUnitResourceIT {
     @Transactional
     void putNonExistingBusinessUnit() throws Exception {
         int databaseSizeBeforeUpdate = businessUnitRepository.findAll().size();
-        businessUnit.setId(UUID.randomUUID().toString());
+        businessUnit.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBusinessUnitMockMvc
@@ -264,12 +265,12 @@ class BusinessUnitResourceIT {
     @Transactional
     void putWithIdMismatchBusinessUnit() throws Exception {
         int databaseSizeBeforeUpdate = businessUnitRepository.findAll().size();
-        businessUnit.setId(UUID.randomUUID().toString());
+        businessUnit.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBusinessUnitMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(businessUnit))
             )
@@ -284,7 +285,7 @@ class BusinessUnitResourceIT {
     @Transactional
     void putWithMissingIdPathParamBusinessUnit() throws Exception {
         int databaseSizeBeforeUpdate = businessUnitRepository.findAll().size();
-        businessUnit.setId(UUID.randomUUID().toString());
+        businessUnit.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBusinessUnitMockMvc
@@ -300,7 +301,6 @@ class BusinessUnitResourceIT {
     @Transactional
     void partialUpdateBusinessUnitWithPatch() throws Exception {
         // Initialize the database
-        businessUnit.setId(UUID.randomUUID().toString());
         businessUnitRepository.saveAndFlush(businessUnit);
 
         int databaseSizeBeforeUpdate = businessUnitRepository.findAll().size();
@@ -332,7 +332,6 @@ class BusinessUnitResourceIT {
     @Transactional
     void fullUpdateBusinessUnitWithPatch() throws Exception {
         // Initialize the database
-        businessUnit.setId(UUID.randomUUID().toString());
         businessUnitRepository.saveAndFlush(businessUnit);
 
         int databaseSizeBeforeUpdate = businessUnitRepository.findAll().size();
@@ -364,7 +363,7 @@ class BusinessUnitResourceIT {
     @Transactional
     void patchNonExistingBusinessUnit() throws Exception {
         int databaseSizeBeforeUpdate = businessUnitRepository.findAll().size();
-        businessUnit.setId(UUID.randomUUID().toString());
+        businessUnit.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBusinessUnitMockMvc
@@ -384,12 +383,12 @@ class BusinessUnitResourceIT {
     @Transactional
     void patchWithIdMismatchBusinessUnit() throws Exception {
         int databaseSizeBeforeUpdate = businessUnitRepository.findAll().size();
-        businessUnit.setId(UUID.randomUUID().toString());
+        businessUnit.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBusinessUnitMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(businessUnit))
             )
@@ -404,7 +403,7 @@ class BusinessUnitResourceIT {
     @Transactional
     void patchWithMissingIdPathParamBusinessUnit() throws Exception {
         int databaseSizeBeforeUpdate = businessUnitRepository.findAll().size();
-        businessUnit.setId(UUID.randomUUID().toString());
+        businessUnit.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBusinessUnitMockMvc
@@ -422,7 +421,6 @@ class BusinessUnitResourceIT {
     @Transactional
     void deleteBusinessUnit() throws Exception {
         // Initialize the database
-        businessUnit.setId(UUID.randomUUID().toString());
         businessUnitRepository.saveAndFlush(businessUnit);
 
         int databaseSizeBeforeDelete = businessUnitRepository.findAll().size();

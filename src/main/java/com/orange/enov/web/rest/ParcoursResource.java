@@ -8,6 +8,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -56,7 +58,7 @@ public class ParcoursResource {
         Parcours result = parcoursRepository.save(parcours);
         return ResponseEntity
             .created(new URI("/api/parcours/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -72,7 +74,7 @@ public class ParcoursResource {
      */
     @PutMapping("/parcours/{id}")
     public ResponseEntity<Parcours> updateParcours(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody Parcours parcours
     ) throws URISyntaxException {
         log.debug("REST request to update Parcours : {}, {}", id, parcours);
@@ -90,7 +92,7 @@ public class ParcoursResource {
         Parcours result = parcoursRepository.save(parcours);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, parcours.getId()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, parcours.getId().toString()))
             .body(result);
     }
 
@@ -107,7 +109,7 @@ public class ParcoursResource {
      */
     @PatchMapping(value = "/parcours/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<Parcours> partialUpdateParcours(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Parcours parcours
     ) throws URISyntaxException {
         log.debug("REST request to partial update Parcours partially : {}, {}", id, parcours);
@@ -141,17 +143,25 @@ public class ParcoursResource {
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, parcours.getId())
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, parcours.getId().toString())
         );
     }
 
     /**
      * {@code GET  /parcours} : get all the parcours.
      *
+     * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of parcours in body.
      */
     @GetMapping("/parcours")
-    public List<Parcours> getAllParcours() {
+    public List<Parcours> getAllParcours(@RequestParam(required = false) String filter) {
+        if ("simulation-is-null".equals(filter)) {
+            log.debug("REST request to get all Parcourss where simulation is null");
+            return StreamSupport
+                .stream(parcoursRepository.findAll().spliterator(), false)
+                .filter(parcours -> parcours.getSimulation() == null)
+                .collect(Collectors.toList());
+        }
         log.debug("REST request to get all Parcours");
         return parcoursRepository.findAll();
     }
@@ -163,7 +173,7 @@ public class ParcoursResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the parcours, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/parcours/{id}")
-    public ResponseEntity<Parcours> getParcours(@PathVariable String id) {
+    public ResponseEntity<Parcours> getParcours(@PathVariable Long id) {
         log.debug("REST request to get Parcours : {}", id);
         Optional<Parcours> parcours = parcoursRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(parcours);
@@ -176,9 +186,12 @@ public class ParcoursResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/parcours/{id}")
-    public ResponseEntity<Void> deleteParcours(@PathVariable String id) {
+    public ResponseEntity<Void> deleteParcours(@PathVariable Long id) {
         log.debug("REST request to delete Parcours : {}", id);
         parcoursRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

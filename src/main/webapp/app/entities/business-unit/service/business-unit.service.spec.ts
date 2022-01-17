@@ -20,7 +20,7 @@ describe('BusinessUnit Service', () => {
     httpMock = TestBed.inject(HttpTestingController);
 
     elemDefault = {
-      id: 'AAAAAAA',
+      id: 0,
       code: 'AAAAAAA',
       name: 'AAAAAAA',
       label: 'AAAAAAA',
@@ -31,7 +31,7 @@ describe('BusinessUnit Service', () => {
     it('should find an element', () => {
       const returnedFromService = Object.assign({}, elemDefault);
 
-      service.find('ABC').subscribe(resp => (expectedResult = resp.body));
+      service.find(123).subscribe(resp => (expectedResult = resp.body));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -41,7 +41,7 @@ describe('BusinessUnit Service', () => {
     it('should create a BusinessUnit', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'ID',
+          id: 0,
         },
         elemDefault
       );
@@ -58,7 +58,7 @@ describe('BusinessUnit Service', () => {
     it('should update a BusinessUnit', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'BBBBBB',
+          id: 1,
           code: 'BBBBBB',
           name: 'BBBBBB',
           label: 'BBBBBB',
@@ -98,7 +98,7 @@ describe('BusinessUnit Service', () => {
     it('should return a list of BusinessUnit', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'BBBBBB',
+          id: 1,
           code: 'BBBBBB',
           name: 'BBBBBB',
           label: 'BBBBBB',
@@ -117,7 +117,7 @@ describe('BusinessUnit Service', () => {
     });
 
     it('should delete a BusinessUnit', () => {
-      service.delete('ABC').subscribe(resp => (expectedResult = resp.ok));
+      service.delete(123).subscribe(resp => (expectedResult = resp.ok));
 
       const req = httpMock.expectOne({ method: 'DELETE' });
       req.flush({ status: 200 });
@@ -126,42 +126,42 @@ describe('BusinessUnit Service', () => {
 
     describe('addBusinessUnitToCollectionIfMissing', () => {
       it('should add a BusinessUnit to an empty array', () => {
-        const businessUnit: IBusinessUnit = { id: 'ABC' };
+        const businessUnit: IBusinessUnit = { id: 123 };
         expectedResult = service.addBusinessUnitToCollectionIfMissing([], businessUnit);
         expect(expectedResult).toHaveLength(1);
         expect(expectedResult).toContain(businessUnit);
       });
 
       it('should not add a BusinessUnit to an array that contains it', () => {
-        const businessUnit: IBusinessUnit = { id: 'ABC' };
+        const businessUnit: IBusinessUnit = { id: 123 };
         const businessUnitCollection: IBusinessUnit[] = [
           {
             ...businessUnit,
           },
-          { id: 'CBA' },
+          { id: 456 },
         ];
         expectedResult = service.addBusinessUnitToCollectionIfMissing(businessUnitCollection, businessUnit);
         expect(expectedResult).toHaveLength(2);
       });
 
       it("should add a BusinessUnit to an array that doesn't contain it", () => {
-        const businessUnit: IBusinessUnit = { id: 'ABC' };
-        const businessUnitCollection: IBusinessUnit[] = [{ id: 'CBA' }];
+        const businessUnit: IBusinessUnit = { id: 123 };
+        const businessUnitCollection: IBusinessUnit[] = [{ id: 456 }];
         expectedResult = service.addBusinessUnitToCollectionIfMissing(businessUnitCollection, businessUnit);
         expect(expectedResult).toHaveLength(2);
         expect(expectedResult).toContain(businessUnit);
       });
 
       it('should add only unique BusinessUnit to an array', () => {
-        const businessUnitArray: IBusinessUnit[] = [{ id: 'ABC' }, { id: 'CBA' }, { id: 'b1ff4327-c81d-4ed6-bdeb-b7a9b03fa68f' }];
-        const businessUnitCollection: IBusinessUnit[] = [{ id: 'ABC' }];
+        const businessUnitArray: IBusinessUnit[] = [{ id: 123 }, { id: 456 }, { id: 71657 }];
+        const businessUnitCollection: IBusinessUnit[] = [{ id: 123 }];
         expectedResult = service.addBusinessUnitToCollectionIfMissing(businessUnitCollection, ...businessUnitArray);
         expect(expectedResult).toHaveLength(3);
       });
 
       it('should accept varargs', () => {
-        const businessUnit: IBusinessUnit = { id: 'ABC' };
-        const businessUnit2: IBusinessUnit = { id: 'CBA' };
+        const businessUnit: IBusinessUnit = { id: 123 };
+        const businessUnit2: IBusinessUnit = { id: 456 };
         expectedResult = service.addBusinessUnitToCollectionIfMissing([], businessUnit, businessUnit2);
         expect(expectedResult).toHaveLength(2);
         expect(expectedResult).toContain(businessUnit);
@@ -169,14 +169,14 @@ describe('BusinessUnit Service', () => {
       });
 
       it('should accept null and undefined values', () => {
-        const businessUnit: IBusinessUnit = { id: 'ABC' };
+        const businessUnit: IBusinessUnit = { id: 123 };
         expectedResult = service.addBusinessUnitToCollectionIfMissing([], null, businessUnit, undefined);
         expect(expectedResult).toHaveLength(1);
         expect(expectedResult).toContain(businessUnit);
       });
 
       it('should return initial array if no BusinessUnit is added', () => {
-        const businessUnitCollection: IBusinessUnit[] = [{ id: 'ABC' }];
+        const businessUnitCollection: IBusinessUnit[] = [{ id: 123 }];
         expectedResult = service.addBusinessUnitToCollectionIfMissing(businessUnitCollection, undefined, null);
         expect(expectedResult).toEqual(businessUnitCollection);
       });

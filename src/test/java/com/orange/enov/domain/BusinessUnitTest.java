@@ -11,11 +11,11 @@ class BusinessUnitTest {
     void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(BusinessUnit.class);
         BusinessUnit businessUnit1 = new BusinessUnit();
-        businessUnit1.setId("id1");
+        businessUnit1.setId(1L);
         BusinessUnit businessUnit2 = new BusinessUnit();
         businessUnit2.setId(businessUnit1.getId());
         assertThat(businessUnit1).isEqualTo(businessUnit2);
-        businessUnit2.setId("id2");
+        businessUnit2.setId(2L);
         assertThat(businessUnit1).isNotEqualTo(businessUnit2);
         businessUnit1.setId(null);
         assertThat(businessUnit1).isNotEqualTo(businessUnit2);

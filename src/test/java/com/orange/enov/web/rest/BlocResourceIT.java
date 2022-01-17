@@ -9,7 +9,8 @@ import com.orange.enov.IntegrationTest;
 import com.orange.enov.domain.Bloc;
 import com.orange.enov.repository.BlocRepository;
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,11 +41,20 @@ class BlocResourceIT {
     private static final String DEFAULT_ELEMENT_PATH = "AAAAAAAAAA";
     private static final String UPDATED_ELEMENT_PATH = "BBBBBBBBBB";
 
+    private static final String DEFAULT_ETAPE_DEFINITION_ID = "AAAAAAAAAA";
+    private static final String UPDATED_ETAPE_DEFINITION_ID = "BBBBBBBBBB";
+
+    private static final String DEFAULT_BLOC_DEFINITION_ID = "AAAAAAAAAA";
+    private static final String UPDATED_BLOC_DEFINITION_ID = "BBBBBBBBBB";
+
     private static final Boolean DEFAULT_DISPLAY = false;
     private static final Boolean UPDATED_DISPLAY = true;
 
     private static final String ENTITY_API_URL = "/api/blocs";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private BlocRepository blocRepository;
@@ -69,6 +79,8 @@ class BlocResourceIT {
             .label(DEFAULT_LABEL)
             .elementName(DEFAULT_ELEMENT_NAME)
             .elementPath(DEFAULT_ELEMENT_PATH)
+            .etapeDefinitionId(DEFAULT_ETAPE_DEFINITION_ID)
+            .blocDefinitionId(DEFAULT_BLOC_DEFINITION_ID)
             .display(DEFAULT_DISPLAY);
         return bloc;
     }
@@ -85,6 +97,8 @@ class BlocResourceIT {
             .label(UPDATED_LABEL)
             .elementName(UPDATED_ELEMENT_NAME)
             .elementPath(UPDATED_ELEMENT_PATH)
+            .etapeDefinitionId(UPDATED_ETAPE_DEFINITION_ID)
+            .blocDefinitionId(UPDATED_BLOC_DEFINITION_ID)
             .display(UPDATED_DISPLAY);
         return bloc;
     }
@@ -111,6 +125,8 @@ class BlocResourceIT {
         assertThat(testBloc.getLabel()).isEqualTo(DEFAULT_LABEL);
         assertThat(testBloc.getElementName()).isEqualTo(DEFAULT_ELEMENT_NAME);
         assertThat(testBloc.getElementPath()).isEqualTo(DEFAULT_ELEMENT_PATH);
+        assertThat(testBloc.getEtapeDefinitionId()).isEqualTo(DEFAULT_ETAPE_DEFINITION_ID);
+        assertThat(testBloc.getBlocDefinitionId()).isEqualTo(DEFAULT_BLOC_DEFINITION_ID);
         assertThat(testBloc.getDisplay()).isEqualTo(DEFAULT_DISPLAY);
     }
 
@@ -118,7 +134,7 @@ class BlocResourceIT {
     @Transactional
     void createBlocWithExistingId() throws Exception {
         // Create the Bloc with an existing ID
-        bloc.setId("existing_id");
+        bloc.setId(1L);
 
         int databaseSizeBeforeCreate = blocRepository.findAll().size();
 
@@ -202,6 +218,40 @@ class BlocResourceIT {
 
     @Test
     @Transactional
+    void checkEtapeDefinitionIdIsRequired() throws Exception {
+        int databaseSizeBeforeTest = blocRepository.findAll().size();
+        // set the field null
+        bloc.setEtapeDefinitionId(null);
+
+        // Create the Bloc, which fails.
+
+        restBlocMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(bloc)))
+            .andExpect(status().isBadRequest());
+
+        List<Bloc> blocList = blocRepository.findAll();
+        assertThat(blocList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkBlocDefinitionIdIsRequired() throws Exception {
+        int databaseSizeBeforeTest = blocRepository.findAll().size();
+        // set the field null
+        bloc.setBlocDefinitionId(null);
+
+        // Create the Bloc, which fails.
+
+        restBlocMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(bloc)))
+            .andExpect(status().isBadRequest());
+
+        List<Bloc> blocList = blocRepository.findAll();
+        assertThat(blocList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void checkDisplayIsRequired() throws Exception {
         int databaseSizeBeforeTest = blocRepository.findAll().size();
         // set the field null
@@ -221,7 +271,6 @@ class BlocResourceIT {
     @Transactional
     void getAllBlocs() throws Exception {
         // Initialize the database
-        bloc.setId(UUID.randomUUID().toString());
         blocRepository.saveAndFlush(bloc);
 
         // Get all the blocList
@@ -229,11 +278,13 @@ class BlocResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(bloc.getId())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(bloc.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL)))
             .andExpect(jsonPath("$.[*].elementName").value(hasItem(DEFAULT_ELEMENT_NAME)))
             .andExpect(jsonPath("$.[*].elementPath").value(hasItem(DEFAULT_ELEMENT_PATH)))
+            .andExpect(jsonPath("$.[*].etapeDefinitionId").value(hasItem(DEFAULT_ETAPE_DEFINITION_ID)))
+            .andExpect(jsonPath("$.[*].blocDefinitionId").value(hasItem(DEFAULT_BLOC_DEFINITION_ID)))
             .andExpect(jsonPath("$.[*].display").value(hasItem(DEFAULT_DISPLAY.booleanValue())));
     }
 
@@ -241,7 +292,6 @@ class BlocResourceIT {
     @Transactional
     void getBloc() throws Exception {
         // Initialize the database
-        bloc.setId(UUID.randomUUID().toString());
         blocRepository.saveAndFlush(bloc);
 
         // Get the bloc
@@ -249,11 +299,13 @@ class BlocResourceIT {
             .perform(get(ENTITY_API_URL_ID, bloc.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(bloc.getId()))
+            .andExpect(jsonPath("$.id").value(bloc.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.label").value(DEFAULT_LABEL))
             .andExpect(jsonPath("$.elementName").value(DEFAULT_ELEMENT_NAME))
             .andExpect(jsonPath("$.elementPath").value(DEFAULT_ELEMENT_PATH))
+            .andExpect(jsonPath("$.etapeDefinitionId").value(DEFAULT_ETAPE_DEFINITION_ID))
+            .andExpect(jsonPath("$.blocDefinitionId").value(DEFAULT_BLOC_DEFINITION_ID))
             .andExpect(jsonPath("$.display").value(DEFAULT_DISPLAY.booleanValue()));
     }
 
@@ -268,7 +320,6 @@ class BlocResourceIT {
     @Transactional
     void putNewBloc() throws Exception {
         // Initialize the database
-        bloc.setId(UUID.randomUUID().toString());
         blocRepository.saveAndFlush(bloc);
 
         int databaseSizeBeforeUpdate = blocRepository.findAll().size();
@@ -282,6 +333,8 @@ class BlocResourceIT {
             .label(UPDATED_LABEL)
             .elementName(UPDATED_ELEMENT_NAME)
             .elementPath(UPDATED_ELEMENT_PATH)
+            .etapeDefinitionId(UPDATED_ETAPE_DEFINITION_ID)
+            .blocDefinitionId(UPDATED_BLOC_DEFINITION_ID)
             .display(UPDATED_DISPLAY);
 
         restBlocMockMvc
@@ -300,6 +353,8 @@ class BlocResourceIT {
         assertThat(testBloc.getLabel()).isEqualTo(UPDATED_LABEL);
         assertThat(testBloc.getElementName()).isEqualTo(UPDATED_ELEMENT_NAME);
         assertThat(testBloc.getElementPath()).isEqualTo(UPDATED_ELEMENT_PATH);
+        assertThat(testBloc.getEtapeDefinitionId()).isEqualTo(UPDATED_ETAPE_DEFINITION_ID);
+        assertThat(testBloc.getBlocDefinitionId()).isEqualTo(UPDATED_BLOC_DEFINITION_ID);
         assertThat(testBloc.getDisplay()).isEqualTo(UPDATED_DISPLAY);
     }
 
@@ -307,7 +362,7 @@ class BlocResourceIT {
     @Transactional
     void putNonExistingBloc() throws Exception {
         int databaseSizeBeforeUpdate = blocRepository.findAll().size();
-        bloc.setId(UUID.randomUUID().toString());
+        bloc.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBlocMockMvc
@@ -327,12 +382,12 @@ class BlocResourceIT {
     @Transactional
     void putWithIdMismatchBloc() throws Exception {
         int databaseSizeBeforeUpdate = blocRepository.findAll().size();
-        bloc.setId(UUID.randomUUID().toString());
+        bloc.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBlocMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(bloc))
             )
@@ -347,7 +402,7 @@ class BlocResourceIT {
     @Transactional
     void putWithMissingIdPathParamBloc() throws Exception {
         int databaseSizeBeforeUpdate = blocRepository.findAll().size();
-        bloc.setId(UUID.randomUUID().toString());
+        bloc.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBlocMockMvc
@@ -363,7 +418,6 @@ class BlocResourceIT {
     @Transactional
     void partialUpdateBlocWithPatch() throws Exception {
         // Initialize the database
-        bloc.setId(UUID.randomUUID().toString());
         blocRepository.saveAndFlush(bloc);
 
         int databaseSizeBeforeUpdate = blocRepository.findAll().size();
@@ -390,6 +444,8 @@ class BlocResourceIT {
         assertThat(testBloc.getLabel()).isEqualTo(DEFAULT_LABEL);
         assertThat(testBloc.getElementName()).isEqualTo(DEFAULT_ELEMENT_NAME);
         assertThat(testBloc.getElementPath()).isEqualTo(UPDATED_ELEMENT_PATH);
+        assertThat(testBloc.getEtapeDefinitionId()).isEqualTo(DEFAULT_ETAPE_DEFINITION_ID);
+        assertThat(testBloc.getBlocDefinitionId()).isEqualTo(DEFAULT_BLOC_DEFINITION_ID);
         assertThat(testBloc.getDisplay()).isEqualTo(DEFAULT_DISPLAY);
     }
 
@@ -397,7 +453,6 @@ class BlocResourceIT {
     @Transactional
     void fullUpdateBlocWithPatch() throws Exception {
         // Initialize the database
-        bloc.setId(UUID.randomUUID().toString());
         blocRepository.saveAndFlush(bloc);
 
         int databaseSizeBeforeUpdate = blocRepository.findAll().size();
@@ -411,6 +466,8 @@ class BlocResourceIT {
             .label(UPDATED_LABEL)
             .elementName(UPDATED_ELEMENT_NAME)
             .elementPath(UPDATED_ELEMENT_PATH)
+            .etapeDefinitionId(UPDATED_ETAPE_DEFINITION_ID)
+            .blocDefinitionId(UPDATED_BLOC_DEFINITION_ID)
             .display(UPDATED_DISPLAY);
 
         restBlocMockMvc
@@ -429,6 +486,8 @@ class BlocResourceIT {
         assertThat(testBloc.getLabel()).isEqualTo(UPDATED_LABEL);
         assertThat(testBloc.getElementName()).isEqualTo(UPDATED_ELEMENT_NAME);
         assertThat(testBloc.getElementPath()).isEqualTo(UPDATED_ELEMENT_PATH);
+        assertThat(testBloc.getEtapeDefinitionId()).isEqualTo(UPDATED_ETAPE_DEFINITION_ID);
+        assertThat(testBloc.getBlocDefinitionId()).isEqualTo(UPDATED_BLOC_DEFINITION_ID);
         assertThat(testBloc.getDisplay()).isEqualTo(UPDATED_DISPLAY);
     }
 
@@ -436,7 +495,7 @@ class BlocResourceIT {
     @Transactional
     void patchNonExistingBloc() throws Exception {
         int databaseSizeBeforeUpdate = blocRepository.findAll().size();
-        bloc.setId(UUID.randomUUID().toString());
+        bloc.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBlocMockMvc
@@ -456,12 +515,12 @@ class BlocResourceIT {
     @Transactional
     void patchWithIdMismatchBloc() throws Exception {
         int databaseSizeBeforeUpdate = blocRepository.findAll().size();
-        bloc.setId(UUID.randomUUID().toString());
+        bloc.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBlocMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, UUID.randomUUID().toString())
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(bloc))
             )
@@ -476,7 +535,7 @@ class BlocResourceIT {
     @Transactional
     void patchWithMissingIdPathParamBloc() throws Exception {
         int databaseSizeBeforeUpdate = blocRepository.findAll().size();
-        bloc.setId(UUID.randomUUID().toString());
+        bloc.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBlocMockMvc
@@ -492,7 +551,6 @@ class BlocResourceIT {
     @Transactional
     void deleteBloc() throws Exception {
         // Initialize the database
-        bloc.setId(UUID.randomUUID().toString());
         blocRepository.saveAndFlush(bloc);
 
         int databaseSizeBeforeDelete = blocRepository.findAll().size();

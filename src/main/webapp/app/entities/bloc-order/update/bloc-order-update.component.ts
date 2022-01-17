@@ -61,11 +61,11 @@ export class BlocOrderUpdateComponent implements OnInit {
     }
   }
 
-  trackEtapeDefinitionById(index: number, item: IEtapeDefinition): string {
+  trackEtapeDefinitionById(index: number, item: IEtapeDefinition): number {
     return item.id!;
   }
 
-  trackBlocDefinitionById(index: number, item: IBlocDefinition): string {
+  trackBlocDefinitionById(index: number, item: IBlocDefinition): number {
     return item.id!;
   }
 

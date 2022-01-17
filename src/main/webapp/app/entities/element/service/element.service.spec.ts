@@ -20,7 +20,7 @@ describe('Element Service', () => {
     httpMock = TestBed.inject(HttpTestingController);
 
     elemDefault = {
-      id: 'AAAAAAA',
+      id: 0,
       name: 'AAAAAAA',
       path: 'AAAAAAA',
     };
@@ -30,7 +30,7 @@ describe('Element Service', () => {
     it('should find an element', () => {
       const returnedFromService = Object.assign({}, elemDefault);
 
-      service.find('ABC').subscribe(resp => (expectedResult = resp.body));
+      service.find(123).subscribe(resp => (expectedResult = resp.body));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -40,7 +40,7 @@ describe('Element Service', () => {
     it('should create a Element', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'ID',
+          id: 0,
         },
         elemDefault
       );
@@ -57,7 +57,7 @@ describe('Element Service', () => {
     it('should update a Element', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'BBBBBB',
+          id: 1,
           name: 'BBBBBB',
           path: 'BBBBBB',
         },
@@ -95,7 +95,7 @@ describe('Element Service', () => {
     it('should return a list of Element', () => {
       const returnedFromService = Object.assign(
         {
-          id: 'BBBBBB',
+          id: 1,
           name: 'BBBBBB',
           path: 'BBBBBB',
         },
@@ -113,7 +113,7 @@ describe('Element Service', () => {
     });
 
     it('should delete a Element', () => {
-      service.delete('ABC').subscribe(resp => (expectedResult = resp.ok));
+      service.delete(123).subscribe(resp => (expectedResult = resp.ok));
 
       const req = httpMock.expectOne({ method: 'DELETE' });
       req.flush({ status: 200 });
@@ -122,42 +122,42 @@ describe('Element Service', () => {
 
     describe('addElementToCollectionIfMissing', () => {
       it('should add a Element to an empty array', () => {
-        const element: IElement = { id: 'ABC' };
+        const element: IElement = { id: 123 };
         expectedResult = service.addElementToCollectionIfMissing([], element);
         expect(expectedResult).toHaveLength(1);
         expect(expectedResult).toContain(element);
       });
 
       it('should not add a Element to an array that contains it', () => {
-        const element: IElement = { id: 'ABC' };
+        const element: IElement = { id: 123 };
         const elementCollection: IElement[] = [
           {
             ...element,
           },
-          { id: 'CBA' },
+          { id: 456 },
         ];
         expectedResult = service.addElementToCollectionIfMissing(elementCollection, element);
         expect(expectedResult).toHaveLength(2);
       });
 
       it("should add a Element to an array that doesn't contain it", () => {
-        const element: IElement = { id: 'ABC' };
-        const elementCollection: IElement[] = [{ id: 'CBA' }];
+        const element: IElement = { id: 123 };
+        const elementCollection: IElement[] = [{ id: 456 }];
         expectedResult = service.addElementToCollectionIfMissing(elementCollection, element);
         expect(expectedResult).toHaveLength(2);
         expect(expectedResult).toContain(element);
       });
 
       it('should add only unique Element to an array', () => {
-        const elementArray: IElement[] = [{ id: 'ABC' }, { id: 'CBA' }, { id: 'af68a97f-b5bb-400d-bcba-af677fe6a4e6' }];
-        const elementCollection: IElement[] = [{ id: 'ABC' }];
+        const elementArray: IElement[] = [{ id: 123 }, { id: 456 }, { id: 63505 }];
+        const elementCollection: IElement[] = [{ id: 123 }];
         expectedResult = service.addElementToCollectionIfMissing(elementCollection, ...elementArray);
         expect(expectedResult).toHaveLength(3);
       });
 
       it('should accept varargs', () => {
-        const element: IElement = { id: 'ABC' };
-        const element2: IElement = { id: 'CBA' };
+        const element: IElement = { id: 123 };
+        const element2: IElement = { id: 456 };
         expectedResult = service.addElementToCollectionIfMissing([], element, element2);
         expect(expectedResult).toHaveLength(2);
         expect(expectedResult).toContain(element);
@@ -165,14 +165,14 @@ describe('Element Service', () => {
       });
 
       it('should accept null and undefined values', () => {
-        const element: IElement = { id: 'ABC' };
+        const element: IElement = { id: 123 };
         expectedResult = service.addElementToCollectionIfMissing([], null, element, undefined);
         expect(expectedResult).toHaveLength(1);
         expect(expectedResult).toContain(element);
       });
 
       it('should return initial array if no Element is added', () => {
-        const elementCollection: IElement[] = [{ id: 'ABC' }];
+        const elementCollection: IElement[] = [{ id: 123 }];
         expectedResult = service.addElementToCollectionIfMissing(elementCollection, undefined, null);
         expect(expectedResult).toEqual(elementCollection);
       });

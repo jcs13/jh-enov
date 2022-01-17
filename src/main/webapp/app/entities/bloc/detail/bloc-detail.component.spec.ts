@@ -14,7 +14,7 @@ describe('Bloc Management Detail Component', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { data: of({ bloc: { id: 'ABC' } }) },
+          useValue: { data: of({ bloc: { id: 123 } }) },
         },
       ],
     })
@@ -30,7 +30,7 @@ describe('Bloc Management Detail Component', () => {
       comp.ngOnInit();
 
       // THEN
-      expect(comp.bloc).toEqual(expect.objectContaining({ id: 'ABC' }));
+      expect(comp.bloc).toEqual(expect.objectContaining({ id: 123 }));
     });
   });
 });

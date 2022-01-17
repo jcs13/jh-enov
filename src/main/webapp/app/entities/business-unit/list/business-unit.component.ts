@@ -34,7 +34,7 @@ export class BusinessUnitComponent implements OnInit {
     this.loadAll();
   }
 
-  trackId(index: number, item: IBusinessUnit): string {
+  trackId(index: number, item: IBusinessUnit): number {
     return item.id!;
   }
 

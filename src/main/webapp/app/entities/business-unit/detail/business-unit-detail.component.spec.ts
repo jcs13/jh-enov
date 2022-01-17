@@ -14,7 +14,7 @@ describe('BusinessUnit Management Detail Component', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { data: of({ businessUnit: { id: 'ABC' } }) },
+          useValue: { data: of({ businessUnit: { id: 123 } }) },
         },
       ],
     })
@@ -30,7 +30,7 @@ describe('BusinessUnit Management Detail Component', () => {
       comp.ngOnInit();
 
       // THEN
-      expect(comp.businessUnit).toEqual(expect.objectContaining({ id: 'ABC' }));
+      expect(comp.businessUnit).toEqual(expect.objectContaining({ id: 123 }));
     });
   });
 });

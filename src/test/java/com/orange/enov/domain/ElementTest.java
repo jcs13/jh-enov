@@ -11,11 +11,11 @@ class ElementTest {
     void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Element.class);
         Element element1 = new Element();
-        element1.setId("id1");
+        element1.setId(1L);
         Element element2 = new Element();
         element2.setId(element1.getId());
         assertThat(element1).isEqualTo(element2);
-        element2.setId("id2");
+        element2.setId(2L);
         assertThat(element1).isNotEqualTo(element2);
         element1.setId(null);
         assertThat(element1).isNotEqualTo(element2);

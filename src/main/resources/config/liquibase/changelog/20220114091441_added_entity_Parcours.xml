@@ -11,7 +11,7 @@
     -->
     <changeSet id="20220114091441-1" author="jhipster">
         <createTable tableName="parcours">
-            <column name="id" type="varchar(255)">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
@@ -43,7 +43,7 @@
                   separator=";"
                   tableName="parcours"
                   usePreparedStatements="true">
-            <column name="id" type="string"/>
+            <column name="id" type="numeric"/>
             <column name="name" type="string"/>
             <column name="label" type="string"/>
             <column name="offre_id" type="string"/>

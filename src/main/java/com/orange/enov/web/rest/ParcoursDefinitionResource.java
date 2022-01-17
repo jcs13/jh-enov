@@ -57,7 +57,7 @@ public class ParcoursDefinitionResource {
         ParcoursDefinition result = parcoursDefinitionRepository.save(parcoursDefinition);
         return ResponseEntity
             .created(new URI("/api/parcours-definitions/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -73,7 +73,7 @@ public class ParcoursDefinitionResource {
      */
     @PutMapping("/parcours-definitions/{id}")
     public ResponseEntity<ParcoursDefinition> updateParcoursDefinition(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody ParcoursDefinition parcoursDefinition
     ) throws URISyntaxException {
         log.debug("REST request to update ParcoursDefinition : {}, {}", id, parcoursDefinition);
@@ -91,7 +91,7 @@ public class ParcoursDefinitionResource {
         ParcoursDefinition result = parcoursDefinitionRepository.save(parcoursDefinition);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, parcoursDefinition.getId()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, parcoursDefinition.getId().toString()))
             .body(result);
     }
 
@@ -108,7 +108,7 @@ public class ParcoursDefinitionResource {
      */
     @PatchMapping(value = "/parcours-definitions/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<ParcoursDefinition> partialUpdateParcoursDefinition(
-        @PathVariable(value = "id", required = false) final String id,
+        @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody ParcoursDefinition parcoursDefinition
     ) throws URISyntaxException {
         log.debug("REST request to partial update ParcoursDefinition partially : {}, {}", id, parcoursDefinition);
@@ -139,7 +139,7 @@ public class ParcoursDefinitionResource {
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, parcoursDefinition.getId())
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, parcoursDefinition.getId().toString())
         );
     }
 
@@ -161,7 +161,7 @@ public class ParcoursDefinitionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the parcoursDefinition, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/parcours-definitions/{id}")
-    public ResponseEntity<ParcoursDefinition> getParcoursDefinition(@PathVariable String id) {
+    public ResponseEntity<ParcoursDefinition> getParcoursDefinition(@PathVariable Long id) {
         log.debug("REST request to get ParcoursDefinition : {}", id);
         Optional<ParcoursDefinition> parcoursDefinition = parcoursDefinitionRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(parcoursDefinition);
@@ -174,9 +174,12 @@ public class ParcoursDefinitionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/parcours-definitions/{id}")
-    public ResponseEntity<Void> deleteParcoursDefinition(@PathVariable String id) {
+    public ResponseEntity<Void> deleteParcoursDefinition(@PathVariable Long id) {
         log.debug("REST request to delete ParcoursDefinition : {}", id);
         parcoursDefinitionRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }
